@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
-@RestController("/")
+@RestController()
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping
+    @GetMapping(value = "/test")
     public String Request() {
         return "Example";
     }

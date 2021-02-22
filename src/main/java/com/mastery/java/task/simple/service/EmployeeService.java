@@ -13,7 +13,6 @@ public class EmployeeService {
     @Autowired
     private EmployeeDao employeeDao;
 
-
     public List<Employee> findAll() {
         return employeeDao.findAll();
     }
