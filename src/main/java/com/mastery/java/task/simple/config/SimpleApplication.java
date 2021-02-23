@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.mastery.java.task."})
+@ComponentScan(basePackages = {"com.mastery.java.task.simple"})
 public class SimpleApplication {
 
     @Autowired
@@ -17,6 +17,7 @@ public class SimpleApplication {
     public static void main(final String[] args) {
 
         ApplicationContext context = SpringApplication.run(SimpleApplication.class, args);
+
         EmployeeService employeeService = context.getBean(EmployeeService.class);
 
         System.out.println(employeeService.findAll());
