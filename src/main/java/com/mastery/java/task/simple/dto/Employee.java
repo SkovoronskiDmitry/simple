@@ -39,12 +39,12 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public Gender getGender() {
-        return gender;
+    public String  getGender() {
+        return gender.toString();
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setGender(String gender) {
+        this.gender = Gender.valueOf( gender.toUpperCase());
     }
 
     public Long getDepartmentId() {
@@ -81,7 +81,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId,departmentId,firstName,lastName);
+        return Objects.hash(employeeId, departmentId, firstName, lastName);
     }
 
     @Override

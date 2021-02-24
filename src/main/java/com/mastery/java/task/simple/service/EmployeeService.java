@@ -1,19 +1,18 @@
 package com.mastery.java.task.simple.service;
 
-import com.mastery.java.task.simple.dao.EmployeeDao;
 import com.mastery.java.task.simple.dto.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class EmployeeService {
+public interface EmployeeService {
+    List<Employee> findAll();
 
-    @Autowired
-    private EmployeeDao employeeDao;
+    Optional<Employee> findById(Integer id);
 
-    public List<Employee> findAll() {
-        return employeeDao.findAll();
-    }
+    Long createEmployee(Employee employee);
+
+    void updateEmployee(Employee employee);
+
+    int deleteEmployee(Integer employeeId);
 }

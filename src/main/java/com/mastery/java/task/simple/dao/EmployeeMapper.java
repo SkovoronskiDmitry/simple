@@ -19,7 +19,7 @@ public class EmployeeMapper implements RowMapper<Employee> {
         employee.setLastName(resultSet.getString("last_name"));
         employee.setDepartmentId(Long.valueOf(resultSet.getString("department_id")));
         employee.setJobTitle(resultSet.getString("job_title"));
-        employee.setGender(Gender.valueOf(resultSet.getString("gender").toUpperCase()));
+        employee.setGender(resultSet.getString("gender"));
         employee.setDateOfBirth(Instant.ofEpochMilli
                 ((resultSet.getDate("date_of_birth")).
                         getTime()).atZone(ZoneId.systemDefault()).toLocalDate());

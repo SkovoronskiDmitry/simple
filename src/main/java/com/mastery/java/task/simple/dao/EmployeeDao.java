@@ -1,24 +1,19 @@
 package com.mastery.java.task.simple.dao;
 
 import com.mastery.java.task.simple.dto.Employee;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class EmployeeDao {
+public interface EmployeeDao {
 
-    public EmployeeDao(NamedParameterJdbcTemplate template) {
-        this.template = template;
-    }
+    List<Employee> findAll();
 
-    NamedParameterJdbcTemplate template;
+    Optional<Employee> findById(Integer id);
 
-    private final String findAllSql = "SELECT * FROM employee";
+    Long createEmployee(Employee employee);
 
-    public List<Employee> findAll() {
+    void updateEmployee(Employee employee);
 
-        return template.query(findAllSql, new EmployeeMapper());
-    }
+    int deleteEmployee(Integer employeeId);
 }
