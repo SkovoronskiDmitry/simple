@@ -15,6 +15,17 @@ public class Employee {
     public Employee() {
     }
 
+    public Employee( String firstName, String lastName,
+                     String gender,Long departmentId,
+                     String jobTitle, LocalDate dateOfBirth) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = (Gender.valueOf(gender.toUpperCase()));
+        this.departmentId = departmentId;
+        this.jobTitle = jobTitle;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public Long getEmployeeId() {
         return employeeId;
     }
