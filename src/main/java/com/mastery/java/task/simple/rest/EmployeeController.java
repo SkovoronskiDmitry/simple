@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,21 +28,29 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/employee/{employeeId}")
-    public Optional<Employee> findById(@PathVariable Integer employeeId) {
-        return employeeServiceImp.findById(employeeId);
+    public ResponseEntity<Employee> findById(@PathVariable Integer employeeId) {
+        Optional<Employee> optionalEmployee = employeeServiceImp.findById(employeeId);
+        return optionalEmployee.isPresent()
+                ? new ResponseEntity<>(optionalEmployee.get(), HttpStatus.OK)
+                : new ResponseEntity(
+                new FileNotFoundException(),
+                HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/createEmployee")
-    public Long createEmployee(@RequestBody Employee employee) {
-        return employeeServiceImp.createEmployee(employee);
+    public ResponseEntity<Long> createEmployee(@RequestBody Employee employee) {
+        Long employeeId = employeeServiceImp.createEmployee(employee);
+        return new ResponseEntity<>(employeeId, HttpStatus.OK);
     }
-    @PostMapping(value = "/updateEmployee")
-    public void updateEmployee(@RequestBody Employee employee){
+
+    @PutMapping(value = "/updateEmployee")
+    public ResponseEntity<Boolean> updateEmployee(@RequestBody Employee employee) {
         employeeServiceImp.updateEmployee(employee);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "employee/{employeeId}")
-    public ResponseEntity<Integer> deleteEmployee(@PathVariable Integer employeeId){
+    public ResponseEntity<Integer> deleteEmployee(@PathVariable Integer employeeId) {
         return new ResponseEntity(employeeServiceImp.deleteEmployee(employeeId), HttpStatus.OK);
     }
 
