@@ -73,7 +73,7 @@
 
     function deleteEmployee(employeeId) {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("DELETE", "http://localhost:8080/users/delete/" + employeeId, true);
+        xhttp.open("DELETE", "http://localhost:8080/webapp/employee/" + employeeId, true);
         xhttp.send();
     }
 
@@ -89,7 +89,7 @@
         xmlhttp.open("POST", "http://localhost:8080/webapp/createEmployee");
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(JSON.stringify({firstName: employeeFirstName, lastName: employeeLastName, departmentId: employeeDepartmentId, jobTitle:employeeJobTitle, gender:employeeGender, dateOfBirth:employeeDateOfBirth}));
-        loadUsers();
+        loadEmployees();
     }
 
     function loadEmployees() {
@@ -117,7 +117,7 @@
                     '        <td>' + employee.jobTitle + '</td>' +
                     '        <td>' + employee.gender + '</td>' +
                     '        <td>' + employee.dateOfBirth + '</td>' +
-                    '        <td><button onclick="deleteEmployee(' + employee.id + ')">Delete</button></td></tr>';
+                    '        <td><button onclick="deleteEmployee(' + employee.employeeId + ')">Delete</button></td></tr>';
 
                 }
                 document.getElementById("employeeList").innerHTML = html;
