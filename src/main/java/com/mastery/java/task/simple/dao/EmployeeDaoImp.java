@@ -15,17 +15,17 @@ import java.util.Optional;
 @Repository
 public class EmployeeDaoImp implements EmployeeDao {
 
-    public EmployeeDaoImp(NamedParameterJdbcTemplate template) {
+    public EmployeeDaoImp(final NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
-    NamedParameterJdbcTemplate template;
+    final NamedParameterJdbcTemplate template;
 
-    private String findAllSql = "SELECT * FROM employee";
-    private String findByIdSql = "SELECT * FROM employee WHERE employee_id = :employee_id";
-    private String createEmployeeSql = "INSERT INTO employee (first_name, last_name ,department_id, job_title, gender, date_of_birth) VALUES (:first_name, :last_name, :department_id, :job_title, :gender, :date_of_birth)";
-    private String updateEmployeeSql = "UPDATE employee SET department_id = :department_id, job_title = :job_title WHERE employee_id = :employee_id";
-    private String deleteEmployeeSql = "DELETE FROM employee WHERE employee_id = :employee_id";
+    private final String findAllSql = "SELECT * FROM employee";
+    private final String findByIdSql = "SELECT * FROM employee WHERE employee_id = :employee_id";
+    private final String createEmployeeSql = "INSERT INTO employee (first_name, last_name ,department_id, job_title, gender, date_of_birth) VALUES (:first_name, :last_name, :department_id, :job_title, :gender, :date_of_birth)";
+    private final String updateEmployeeSql = "UPDATE employee SET department_id = :department_id, job_title = :job_title WHERE employee_id = :employee_id";
+    private final String deleteEmployeeSql = "DELETE FROM employee WHERE employee_id = :employee_id";
 
     @Override
     public List<Employee> findAll() {
@@ -33,33 +33,33 @@ public class EmployeeDaoImp implements EmployeeDao {
     }
 
     @Override
-    public Optional<Employee> findById(Integer employeeId) {
-        SqlParameterSource namedParameters = new MapSqlParameterSource("employee_id", employeeId);
-        List<Employee> result = template.query(
+    public Optional<Employee> findById(final Integer employeeId) {
+         final SqlParameterSource namedParameters = new MapSqlParameterSource("employee_id", employeeId);
+         final List<Employee> result = template.query(
                 findByIdSql, namedParameters, new EmployeeMapper());
         return Optional.ofNullable(DataAccessUtils.uniqueResult(result));
     }
 
     @Override
-    public Long createEmployee(Employee employee) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long createEmployee(final Employee employee) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(createEmployeeSql,
                 mapSqlParameterSource(employee), keyHolder, new String[]{"employee_id"});
         return keyHolder.getKey().longValue();
     }
 
     @Override
-    public void updateEmployee(Employee employee) {
+    public void updateEmployee(final Employee employee) {
         template.update(updateEmployeeSql, mapSqlParameterSource(employee));
     }
 
     @Override
-    public int deleteEmployee(Integer employeeId) {
+    public int deleteEmployee(final Integer employeeId) {
         return template.update(deleteEmployeeSql,
-                new MapSqlParameterSource().addValue("employee_id",employeeId));
+                new MapSqlParameterSource().addValue("employee_id", employeeId));
     }
 
-    private MapSqlParameterSource mapSqlParameterSource(Employee employee) {
+    private MapSqlParameterSource mapSqlParameterSource(final Employee employee) {
         return new MapSqlParameterSource()
                 .addValue("employee_id", employee.getEmployeeId())
                 .addValue("first_name", employee.getFirstName())

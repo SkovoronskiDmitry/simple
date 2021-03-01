@@ -1,7 +1,6 @@
 package com.mastery.java.task.simple.dao;
 
 import com.mastery.java.task.simple.dto.Employee;
-import com.mastery.java.task.simple.dto.Gender;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -11,6 +10,7 @@ import java.time.ZoneId;
 
 
 public class EmployeeMapper implements RowMapper<Employee> {
+    
     @Override
     public Employee mapRow(ResultSet resultSet, int arg1) throws SQLException {
         Employee employee = new Employee();
