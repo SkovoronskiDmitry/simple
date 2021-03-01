@@ -8,35 +8,39 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class EmployeeDaoImp implements EmployeeDao {
+
+    private static final String findAllSql = "SELECT * FROM employee";
+    private static final String findByIdSql = "SELECT * FROM employee WHERE employee_id = :employee_id";
+    private static final String createEmployeeSql = "INSERT INTO employee (first_name, last_name ,department_id, job_title, gender, date_of_birth) VALUES (:first_name, :last_name, :department_id, :job_title, :gender, :date_of_birth)";
+    private static final String updateEmployeeSql = "UPDATE employee SET department_id = :department_id, job_title = :job_title WHERE employee_id = :employee_id";
+    private static final String deleteEmployeeSql = "DELETE FROM employee WHERE employee_id = :employee_id";
+
+    private final static EmployeeMapper employeeMapper = new EmployeeMapper();
+
+    private final NamedParameterJdbcTemplate template;
 
     public EmployeeDaoImp(final NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
-    final NamedParameterJdbcTemplate template;
-
-    private final String findAllSql = "SELECT * FROM employee";
-    private final String findByIdSql = "SELECT * FROM employee WHERE employee_id = :employee_id";
-    private final String createEmployeeSql = "INSERT INTO employee (first_name, last_name ,department_id, job_title, gender, date_of_birth) VALUES (:first_name, :last_name, :department_id, :job_title, :gender, :date_of_birth)";
-    private final String updateEmployeeSql = "UPDATE employee SET department_id = :department_id, job_title = :job_title WHERE employee_id = :employee_id";
-    private final String deleteEmployeeSql = "DELETE FROM employee WHERE employee_id = :employee_id";
-
     @Override
     public List<Employee> findAll() {
-        return template.query(findAllSql, new EmployeeMapper());
+        return template.query(findAllSql, employeeMapper);
     }
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) {
-         final SqlParameterSource namedParameters = new MapSqlParameterSource("employee_id", employeeId);
-         final List<Employee> result = template.query(
-                findByIdSql, namedParameters, new EmployeeMapper());
+        final SqlParameterSource namedParameters = new MapSqlParameterSource("employee_id", employeeId);
+        final List<Employee> result = template.query(
+                findByIdSql, namedParameters, employeeMapper);
         return Optional.ofNullable(DataAccessUtils.uniqueResult(result));
     }
 

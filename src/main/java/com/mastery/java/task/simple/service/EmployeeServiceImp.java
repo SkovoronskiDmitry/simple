@@ -12,7 +12,11 @@ import java.util.Optional;
 public class EmployeeServiceImp implements EmployeeService {
 
     @Autowired
-    private EmployeeDaoImp employeeDaoImp;
+    private final EmployeeDaoImp employeeDaoImp;
+
+    public EmployeeServiceImp(final EmployeeDaoImp employeeDaoImp) {
+        this.employeeDaoImp = employeeDaoImp;
+    }
 
     @Override
     public List<Employee> findAll() {
@@ -37,6 +41,5 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(final Integer employeeId) {
         return employeeDaoImp.deleteEmployee(employeeId);
-
     }
 }

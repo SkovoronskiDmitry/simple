@@ -10,18 +10,13 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"com.mastery.java.task.simple"})
 public class SimpleApplication {
 
-    final EmployeeServiceImp employeeServiceImp;
+    private final EmployeeServiceImp employeeServiceImp;
 
-    public SimpleApplication(EmployeeServiceImp employeeServiceImp) {
+    public SimpleApplication(final EmployeeServiceImp employeeServiceImp) {
         this.employeeServiceImp = employeeServiceImp;
     }
 
     public static void main(final String[] args) {
-
         ApplicationContext context = SpringApplication.run(SimpleApplication.class, args);
-
-
     }
-
-
 }
