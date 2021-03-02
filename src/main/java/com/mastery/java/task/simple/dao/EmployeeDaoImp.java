@@ -39,9 +39,10 @@ public class EmployeeDaoImp implements EmployeeDao {
     @Override
     public Optional<Employee> findById(final Integer employeeId) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource("employee_id", employeeId);
-        final List<Employee> result = template.query(
+        final List<Employee> resultList = template.query(
                 findByIdSql, namedParameters, employeeMapper);
-        return Optional.ofNullable(DataAccessUtils.uniqueResult(result));
+        Employee employee = DataAccessUtils.uniqueResult(resultList);
+        return Optional.ofNullable(employee);
     }
 
     @Override
