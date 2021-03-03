@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/createEmployee")
-    public ResponseEntity<Long> createEmployee(@RequestBody final Employee employee) {
+    public ResponseEntity<Long> createEmployee(@Valid @RequestBody final Employee employee) {
         final Long employeeId = employeeServiceImp.createEmployee(employee);
         return new ResponseEntity<>(employeeId, HttpStatus.OK);
     }

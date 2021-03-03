@@ -2,6 +2,8 @@ package com.mastery.java.task.simple.service;
 
 import com.mastery.java.task.simple.config.SimpleApplication;
 import com.mastery.java.task.simple.dto.Employee;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = SimpleApplication.class)
 class EmployeeServiceImpTest {
 
+    private static final Logger logger = Logger.getLogger(EmployeeServiceImpTest.class);
+
     @Autowired
     EmployeeServiceImp employeeServiceImp;
 
@@ -26,6 +30,7 @@ class EmployeeServiceImpTest {
 
     @Test
     void shouldFindAllEmployee() {
+        logger.info("Find all Employees");
         List<Employee> employeeList = employeeServiceImp.findAll();
         assertNotNull(employeeList);
         assertTrue(employeeList.size() > 0);
@@ -42,7 +47,7 @@ class EmployeeServiceImpTest {
         Long newEmployeeId = employeeServiceImp.createEmployee(employee);
 
         Optional<Employee> optionalEmployee = employeeServiceImp.findById(Math.toIntExact(newEmployeeId));
-
+        logger.info("Find Employee by Id " + optionalEmployee.get());
         Assertions.assertTrue(optionalEmployee.isPresent());
         assertEquals(optionalEmployee.get().getEmployeeId(), newEmployeeId);
         assertEquals(optionalEmployee.get().getFirstName(), employee.getFirstName());

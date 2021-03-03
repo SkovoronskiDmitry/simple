@@ -1,15 +1,27 @@
 package com.mastery.java.task.simple.dto;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Employee {
+
     private Long employeeId;
+    @NotEmpty(message = "Please provide a firstName")
     private String firstName;
+    @NotEmpty(message = "Please provide a LastName")
     private String lastName;
+    @NotNull(message = "Please provide a gender")
     private Gender gender;
+    @NotNull(message = "Please provide a departmentId")
     private Long departmentId;
+    @NotEmpty(message = "Please provide a jobTitle")
     private String jobTitle;
+    @Past(message = "Only past time")
     private LocalDate dateOfBirth;
 
     public Employee() {
