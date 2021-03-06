@@ -30,7 +30,7 @@ class EmployeeServiceImpTest {
 
     @Test
     void shouldFindAllEmployee() {
-        logger.info("Find all Employees");
+        logger.info("TEST method: Find all Employees");
         List<Employee> employeeList = employeeServiceImp.findAll();
         assertNotNull(employeeList);
         assertTrue(employeeList.size() > 0);
@@ -39,6 +39,7 @@ class EmployeeServiceImpTest {
     @Test
     void ShouldCreateEmployee() {
         Long newEmployeeId = employeeServiceImp.createEmployee(employee);
+        logger.info("TEST method: Employee created with ID:"+newEmployeeId);
         assertNotNull(newEmployeeId);
     }
 
@@ -47,7 +48,9 @@ class EmployeeServiceImpTest {
         Long newEmployeeId = employeeServiceImp.createEmployee(employee);
 
         Optional<Employee> optionalEmployee = employeeServiceImp.findById(Math.toIntExact(newEmployeeId));
-        logger.info("Find Employee by Id " + optionalEmployee.get());
+
+        logger.info("TEST method: Find Employee by Id " + optionalEmployee.get());
+
         Assertions.assertTrue(optionalEmployee.isPresent());
         assertEquals(optionalEmployee.get().getEmployeeId(), newEmployeeId);
         assertEquals(optionalEmployee.get().getFirstName(), employee.getFirstName());
@@ -67,7 +70,7 @@ class EmployeeServiceImpTest {
 
         employeeForUpdate.setDepartmentId(777l);
         employeeForUpdate.setJobTitle("worker");
-
+        logger.info("TEST method: Update Employee:"+employee.equals(employeeForUpdate));
         employeeServiceImp.updateEmployee(employeeForUpdate);
         assertEquals(employee.getEmployeeId(), employeeForUpdate.getEmployeeId());
         assertEquals(employee.getFirstName(), employeeForUpdate.getFirstName());
@@ -87,7 +90,7 @@ class EmployeeServiceImpTest {
 
         List<Employee> employeesFlightAfterDelete = employeeServiceImp.findAll();
         assertNotNull(employeesFlightAfterDelete);
-
+        logger.info("TEST method: Delete Employee:"+ (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
         assertTrue(employeeList.size() - 1 == employeesFlightAfterDelete.size());
     }
 }
