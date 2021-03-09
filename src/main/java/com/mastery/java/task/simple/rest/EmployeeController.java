@@ -1,8 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
+import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
-import com.mastery.java.task.simple.rest.exceptions.EmployeeNotFoundException;
-import com.mastery.java.task.simple.service.EmployeeServiceImp;
+import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
+import com.mastery.java.task.simple.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,39 +16,39 @@ import java.util.Optional;
 @RestController
 public class EmployeeController {
 
-    private final EmployeeServiceImp employeeServiceImp;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeServiceImp employeeServiceImp) {
-        this.employeeServiceImp = employeeServiceImp;
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping(value = "/employee")
-    public Collection<Employee> findAll() {
-        return employeeServiceImp.findAll();
+    public Collection<Employee> findAll() throws EmployeeDaoException {
+        return employeeService.findAll();
     }
 
     @GetMapping(value = "/employee/{employeeId}")
     public ResponseEntity<Employee> findById(@PathVariable final Integer employeeId) {
-        Optional<Employee> optionalEmployee = employeeServiceImp.findById(employeeId);
-        return optionalEmployee.isPresent()
-                ? new ResponseEntity<>(optionalEmployee.get(), HttpStatus.OK)
-                : new ResponseEntity(new EmployeeNotFoundException(employeeId), HttpStatus.NOT_FOUND);
+        Optional<Employee> optionalEmployee = employeeService.findById(employeeId);
+        return optionalEmployee.map(employee -> new ResponseEntity<>(employee, HttpStatus.OK)).
+                orElseGet(() -> new ResponseEntity(new EmployeeNotFoundException(employeeId), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(value = "/createEmployee")
-    public ResponseEntity<Long> createEmployee(@Valid @RequestBody final Employee employee) {
-        final Long employeeId = employeeServiceImp.createEmployee(employee);
+    public ResponseEntity<Long> createEmployee(@Valid @RequestBody final Employee employee) throws EmployeeDaoException {
+        final Long employeeId = employeeService.createEmployee(employee);
         return new ResponseEntity<>(employeeId, HttpStatus.OK);
     }
 
     @PutMapping(value = "/updateEmployee")
     public ResponseEntity<Boolean> updateEmployee(@RequestBody final Employee employee) {
-        employeeServiceImp.updateEmployee(employee);
+        employeeService.updateEmployee(employee);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteEmployee/{employeeId}")
     public ResponseEntity<Integer> deleteEmployee(@PathVariable final Integer employeeId) {
-        return new ResponseEntity(employeeServiceImp.deleteEmployee(employeeId), HttpStatus.OK);
+        return new ResponseEntity(employeeService.deleteEmployee(employeeId), HttpStatus.OK);
     }
 }

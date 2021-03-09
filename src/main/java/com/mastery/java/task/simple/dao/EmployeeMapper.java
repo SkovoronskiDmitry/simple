@@ -1,29 +1,40 @@
 package com.mastery.java.task.simple.dao;
 
+import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
 import com.mastery.java.task.simple.dto.Employee;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
-
+@Component
 public class EmployeeMapper implements RowMapper<Employee> {
-    
-    @Override
-    public Employee mapRow(ResultSet resultSet, int arg1) throws SQLException {
-        Employee employee = new Employee();
-        employee.setEmployeeId(Long.valueOf(resultSet.getString("employee_id")));
-        employee.setFirstName(resultSet.getString("first_name"));
-        employee.setLastName(resultSet.getString("last_name"));
-        employee.setDepartmentId(Long.valueOf(resultSet.getString("department_id")));
-        employee.setJobTitle(resultSet.getString("job_title"));
-        employee.setGender(resultSet.getString("gender"));
-        employee.setDateOfBirth(Instant.ofEpochMilli
-                ((resultSet.getDate("date_of_birth")).
-                        getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 
+    private static final String EMPLOYEE_ID = EmployeeColumnNames.EMPLOYEE_ID;
+    private static final String FIRST_NAME = EmployeeColumnNames.FIRST_NAME;
+    private static final String LAST_NAME = EmployeeColumnNames.LAST_NAME;
+    private static final String DEPARTMENT_ID = EmployeeColumnNames.DEPARTMENT_ID;
+    private static final String JOB_TITLE = EmployeeColumnNames.JOB_TITLE;
+    private static final String GENDER = EmployeeColumnNames.GENDER;
+    private static final String DATE_OF_BIRTH = EmployeeColumnNames.DATE_OF_BIRTH;
+
+    @Override
+    public Employee mapRow(final ResultSet resultSet, final int arg) throws SQLException {
+        final Employee employee = new Employee();
+        final long dateInMilliSec = (resultSet.getDate(DATE_OF_BIRTH)).getTime();
+        final LocalDate localDateWithResultSet = Instant.ofEpochMilli(dateInMilliSec).atZone(ZoneId.systemDefault()).toLocalDate();
+
+        employee.setEmployeeId(Long.valueOf(resultSet.getString(EMPLOYEE_ID)));
+        employee.setFirstName(resultSet.getString(FIRST_NAME));
+        employee.setLastName(resultSet.getString(LAST_NAME));
+        employee.setDepartmentId(Long.valueOf(resultSet.getString(DEPARTMENT_ID)));
+        employee.setJobTitle(resultSet.getString(JOB_TITLE));
+        employee.setGender(resultSet.getString(GENDER));
+        employee.setDateOfBirth(localDateWithResultSet);
         return employee;
     }
 }

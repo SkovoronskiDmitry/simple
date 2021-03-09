@@ -1,5 +1,6 @@
 package com.mastery.java.task.simple.config;
 
+import com.mastery.java.task.simple.SimpleApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 

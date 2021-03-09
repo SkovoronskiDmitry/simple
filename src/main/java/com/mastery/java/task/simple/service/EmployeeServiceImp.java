@@ -1,6 +1,7 @@
 package com.mastery.java.task.simple.service;
 
-import com.mastery.java.task.simple.dao.EmployeeDaoImp;
+import com.mastery.java.task.simple.dao.EmployeeDao;
+import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,35 +12,38 @@ import java.util.Optional;
 @Service
 public class EmployeeServiceImp implements EmployeeService {
 
-    @Autowired
-    private final EmployeeDaoImp employeeDaoImp;
+    private final EmployeeDao employeeDao;
 
-    public EmployeeServiceImp(final EmployeeDaoImp employeeDaoImp) {
-        this.employeeDaoImp = employeeDaoImp;
+    @Autowired
+    public EmployeeServiceImp(final EmployeeDao employeeDao) {
+        this.employeeDao = employeeDao;
     }
 
     @Override
-    public List<Employee> findAll() {
-        return employeeDaoImp.findAll();
+    public List<Employee> findAll() throws EmployeeDaoException {
+        return employeeDao.findAll();
     }
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) {
-        return employeeDaoImp.findById(employeeId);
+        return employeeDao.findById(employeeId);
     }
 
     @Override
-    public Long createEmployee(final Employee employee) {
-        return employeeDaoImp.createEmployee(employee);
+    public Long createEmployee(final Employee employee) throws EmployeeDaoException {
+        if (employee.getEmployeeId() != null) {
+            throw new IllegalArgumentException();
+        }
+        return employeeDao.createEmployee(employee);
     }
 
     @Override
     public void updateEmployee(final Employee employee) {
-        employeeDaoImp.updateEmployee(employee);
+        employeeDao.updateEmployee(employee);
     }
 
     @Override
     public int deleteEmployee(final Integer employeeId) {
-        return employeeDaoImp.deleteEmployee(employeeId);
+        return employeeDao.deleteEmployee(employeeId);
     }
 }

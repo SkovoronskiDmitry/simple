@@ -1,7 +1,5 @@
 package com.mastery.java.task.simple.dto;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -27,12 +25,17 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee( String firstName, String lastName,
-                     String gender,Long departmentId,
-                     String jobTitle, LocalDate dateOfBirth) {
+    public Employee(
+            final String firstName,
+            final String lastName,
+            final String gender,
+            final Long departmentId,
+            final String jobTitle,
+            final LocalDate dateOfBirth
+    ) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = (Gender.valueOf(gender.toUpperCase()));
+        this.gender = Gender.valueOf(gender.toUpperCase());
         this.departmentId = departmentId;
         this.jobTitle = jobTitle;
         this.dateOfBirth = dateOfBirth;
@@ -42,7 +45,7 @@ public class Employee {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(final Long employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -50,7 +53,7 @@ public class Employee {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -58,23 +61,23 @@ public class Employee {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
-    public String  getGender() {
+    public String getGender() {
         return gender.toString();
     }
 
-    public void setGender(String gender) {
-        this.gender = Gender.valueOf( gender.toUpperCase());
+    public void setGender(final String gender) {
+        this.gender = Gender.valueOf(gender.toUpperCase());
     }
 
     public Long getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(Long departmentId) {
+    public void setDepartmentId(final Long departmentId) {
         this.departmentId = departmentId;
     }
 
@@ -82,7 +85,7 @@ public class Employee {
         return jobTitle;
     }
 
-    public void setJobTitle(String jobTitle) {
+    public void setJobTitle(final String jobTitle) {
         this.jobTitle = jobTitle;
     }
 
@@ -90,16 +93,22 @@ public class Employee {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(final LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return employeeId.equals(employee.employeeId) && firstName.equals(employee.firstName) && lastName.equals(employee.lastName);
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Employee employee = (Employee) o;
+        return employeeId.equals(employee.employeeId)
+                && firstName.equals(employee.firstName)
+                && lastName.equals(employee.lastName);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.mastery.java.task.simple.service;
 
-import com.mastery.java.task.simple.config.SimpleApplication;
+import com.mastery.java.task.simple.SimpleApplication;
+import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,41 +19,42 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = SimpleApplication.class)
 class EmployeeServiceImpTest {
 
-    private static final Logger logger = Logger.getLogger(EmployeeServiceImpTest.class);
+    private static final Logger LOGGER = Logger.getLogger(EmployeeServiceImpTest.class);
 
-    @Autowired
-    EmployeeServiceImp employeeServiceImp;
-
-    Employee employee = new Employee("Alex", "Poll",
+    private final static Employee employee = new Employee("Alex", "Poll",
             "male", 8L,
             "assistance", LocalDate.now());
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @Test
-    void shouldFindAllEmployee() {
-        logger.info("TEST method: Find all Employees");
-        List<Employee> employeeList = employeeServiceImp.findAll();
+    void shouldFindAllEmployee() throws EmployeeDaoException {
+        LOGGER.info("TEST method: Find all Employees");
+        List<Employee> employeeList = employeeService.findAll();
+
         assertNotNull(employeeList);
-        assertTrue(employeeList.size() > 0);
+        assertTrue("", employeeList.size() > 0);
     }
 
     @Test
-    void ShouldCreateEmployee() {
-        Long newEmployeeId = employeeServiceImp.createEmployee(employee);
-        logger.info("TEST method: Employee created with ID:"+newEmployeeId);
+    void ShouldCreateEmployee() throws EmployeeDaoException {
+        Long newEmployeeId = employeeService.createEmployee(employee);
+        LOGGER.info("TEST method: Employee created with ID:" + newEmployeeId);
         assertNotNull(newEmployeeId);
     }
 
     @Test
-    void shouldFindEmployeeById() {
-        Long newEmployeeId = employeeServiceImp.createEmployee(employee);
+    void shouldFindEmployeeById() throws EmployeeDaoException {
+        Long newEmployeeId = employeeService.createEmployee(employee);
 
-        Optional<Employee> optionalEmployee = employeeServiceImp.findById(Math.toIntExact(newEmployeeId));
+        Optional<Employee> optionalEmployee = employeeService.findById(Math.toIntExact(newEmployeeId));
 
-        logger.info("TEST method: Find Employee by Id " + optionalEmployee.get());
+        LOGGER.info("TEST method: Find Employee by ID: " + newEmployeeId + optionalEmployee.get());
 
         Assertions.assertTrue(optionalEmployee.isPresent());
         assertEquals(optionalEmployee.get().getEmployeeId(), newEmployeeId);
-        assertEquals(optionalEmployee.get().getFirstName(), employee.getFirstName());
+        Assertions.assertEquals(optionalEmployee.get().getFirstName(), employee.getFirstName());
         assertEquals(optionalEmployee.get().getLastName(), employee.getLastName());
         assertEquals(optionalEmployee.get().getJobTitle(), employee.getJobTitle());
         assertEquals(optionalEmployee.get().getGender(), employee.getGender());
@@ -62,16 +63,16 @@ class EmployeeServiceImpTest {
     }
 
     @Test
-    void updateEmployee() {
-        Long employeeId = employeeServiceImp.createEmployee(employee);
+    void updateEmployee() throws EmployeeDaoException {
+        Long employeeId = employeeService.createEmployee(employee);
         assertNotNull(employeeId);
 
         Employee employeeForUpdate = employee;
 
         employeeForUpdate.setDepartmentId(777l);
         employeeForUpdate.setJobTitle("worker");
-        logger.info("TEST method: Update Employee:"+employee.equals(employeeForUpdate));
-        employeeServiceImp.updateEmployee(employeeForUpdate);
+        LOGGER.info("TEST method: Update Employee:" + employee.equals(employeeForUpdate));
+        employeeService.updateEmployee(employeeForUpdate);
         assertEquals(employee.getEmployeeId(), employeeForUpdate.getEmployeeId());
         assertEquals(employee.getFirstName(), employeeForUpdate.getFirstName());
         assertEquals(employee.getLastName(), employeeForUpdate.getLastName());
@@ -82,15 +83,15 @@ class EmployeeServiceImpTest {
     }
 
     @Test
-    void deleteEmployee() {
-        List<Employee> employeeList = employeeServiceImp.findAll();
+    void deleteEmployee() throws EmployeeDaoException {
+        List<Employee> employeeList = employeeService.findAll();
         assertNotNull(employeeList);
 
-        employeeServiceImp.deleteEmployee(1);
+        employeeService.deleteEmployee(1);
 
-        List<Employee> employeesFlightAfterDelete = employeeServiceImp.findAll();
+        List<Employee> employeesFlightAfterDelete = employeeService.findAll();
         assertNotNull(employeesFlightAfterDelete);
-        logger.info("TEST method: Delete Employee:"+ (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
+        LOGGER.info("TEST method: Delete Employee:" + (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
         assertTrue(employeeList.size() - 1 == employeesFlightAfterDelete.size());
     }
 }
