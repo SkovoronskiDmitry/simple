@@ -34,10 +34,10 @@ public class EmployeeDaoImp implements EmployeeDao {
     private static final String DATE_OF_BIRTH = EmployeeColumnNames.DATE_OF_BIRTH;
 
     private static final String FIND_ALL_SQL = "SELECT * FROM employee";
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM employee WHERE employee_id = :employee_id";
-    private static final String CREATE_EMPLOYEE_SQL = "INSERT INTO employee (first_name, last_name ,department_id, job_title, gender, date_of_birth) VALUES (:first_name, :last_name, :department_id, :job_title, :gender, :date_of_birth)";
-    private static final String UPDATE_EMPLOYEE_SQL = "UPDATE employee SET department_id = :department_id, job_title = :job_title WHERE employee_id = :employee_id";
-    private static final String DELETE_EMPLOYEE_SQL = "DELETE FROM employee WHERE employee_id = :employee_id";
+    private static final String FIND_BY_ID_SQL = "SELECT * FROM employee WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
+    private static final String CREATE_EMPLOYEE_SQL = "INSERT INTO employee (" + FIRST_NAME + ", " + LAST_NAME + " ," + DEPARTMENT_ID + ", " + JOB_TITLE + ", " + GENDER + ", " + DATE_OF_BIRTH + ") VALUES (:" + FIRST_NAME + ", :" + LAST_NAME + ", :" + DEPARTMENT_ID + ", :" + JOB_TITLE + ", :" + GENDER + ", :" + DATE_OF_BIRTH + ")";
+    private static final String UPDATE_EMPLOYEE_SQL = "UPDATE employee SET " + DEPARTMENT_ID + " = :" + DEPARTMENT_ID + ", " + JOB_TITLE + " = :" + JOB_TITLE + " WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
+    private static final String DELETE_EMPLOYEE_SQL = "DELETE FROM employee WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
 
     private final NamedParameterJdbcTemplate template;
     private final EmployeeMapper employeeMapper;

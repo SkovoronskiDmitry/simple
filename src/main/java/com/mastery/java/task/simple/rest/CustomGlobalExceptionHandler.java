@@ -1,5 +1,6 @@
 package com.mastery.java.task.simple.rest;
 
+import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
@@ -45,9 +46,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleIllegalArgument(IllegalArgumentException ex) {
+    public String handleIllegalArgument(final IllegalArgumentException ex) {
         LOGGER.error("Arguments are invalid", ex);
         return "Check type of arguments";
+    }
+
+    @ExceptionHandler(value = {ClassNotFoundException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleClassNotFound(final ClassNotFoundException ex) {
+        LOGGER.error("Class not found", ex);
+        return "Employee not found, may be Employee with such ID didn't exist";
     }
 
     @Override

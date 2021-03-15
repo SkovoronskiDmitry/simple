@@ -26,7 +26,9 @@ public class EmployeeMapper implements RowMapper<Employee> {
     public Employee mapRow(final ResultSet resultSet, final int arg) throws SQLException {
         final Employee employee = new Employee();
         final long dateInMilliSec = (resultSet.getDate(DATE_OF_BIRTH)).getTime();
-        final LocalDate localDateWithResultSet = Instant.ofEpochMilli(dateInMilliSec).atZone(ZoneId.systemDefault()).toLocalDate();
+        final LocalDate localDateWithResultSet = Instant.ofEpochMilli(dateInMilliSec)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
 
         employee.setEmployeeId(Long.valueOf(resultSet.getString(EMPLOYEE_ID)));
         employee.setFirstName(resultSet.getString(FIRST_NAME));
