@@ -1,6 +1,6 @@
 package com.mastery.java.task.simple.rest;
 
-import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
+import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
@@ -16,10 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -57,6 +54,14 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     public String handleClassNotFound(final ClassNotFoundException ex) {
         LOGGER.error("Class not found", ex);
         return "Employee not found, may be Employee with such ID didn't exist";
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleOtherException(final Exception ex) {
+        LOGGER.error("Something Wrong", ex);
+        return "Something going wrong";
     }
 
     @Override

@@ -129,7 +129,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    public void shouldDeleteEmployee() {
+    public void shouldDeleteEmployee() throws EmployeeDaoException {
         // given
         when(employeeDao.deleteEmployee(any(Integer.class))).thenReturn(1);
 

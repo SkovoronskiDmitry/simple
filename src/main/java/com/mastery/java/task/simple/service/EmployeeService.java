@@ -16,5 +16,5 @@ public interface EmployeeService {
 
     void updateEmployee(Employee employee);
 
-    int deleteEmployee(Integer employeeId);
+    int deleteEmployee(Integer employeeId) throws EmployeeDaoException;
 }

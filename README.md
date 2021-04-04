@@ -24,3 +24,9 @@ mvn clean package
 ```
 http://localhost:8080/webapp
 ```
+
+**Use swagger**
+```
+http://localhost:8080/webapp/swagger-ui.html
+http://localhost:8080/webapp/v2/api-docs
+```

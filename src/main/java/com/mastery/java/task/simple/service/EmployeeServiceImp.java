@@ -43,7 +43,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public int deleteEmployee(final Integer employeeId) {
+    public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
         return employeeDao.deleteEmployee(employeeId);
     }
 }

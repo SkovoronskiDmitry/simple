@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -62,7 +63,6 @@ public class EmployeeDaoImp implements EmployeeDao {
     @Override
     public Optional<Employee> findById(final Integer employeeId) {
         LOGGER.info("Find employee by ID: " + employeeId);
-
         final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
         final List<Employee> resultList = template.query(FIND_BY_ID_SQL, namedParameters, employeeMapper);
 
@@ -86,14 +86,20 @@ public class EmployeeDaoImp implements EmployeeDao {
     @Override
     public void updateEmployee(final Employee employee) {
         LOGGER.info("Update the employee");
+
         template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
     }
 
     @Override
-    public int deleteEmployee(final Integer employeeId) {
+    public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
         LOGGER.info("Delete the employee with ID: " + employeeId);
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
-        return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);
+        try {
+            return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);
+        } catch (final RuntimeException ex) {
+            final String errorMassage = "Employee not found with ID:"+employeeId;
+            throw new EmployeeDaoException(errorMassage, ex);
+        }
     }
 
     private MapSqlParameterSource mapSqlParameterSource(final Employee employee) {
