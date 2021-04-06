@@ -58,7 +58,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public String handleOtherException(final Exception ex) {
         LOGGER.error("Something Wrong", ex);
         return "Something going wrong";
