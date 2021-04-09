@@ -25,7 +25,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> findById(final Integer employeeId) {
+    public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
         return employeeDao.findById(employeeId);
     }
 
@@ -38,7 +38,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public void updateEmployee(final Employee employee) {
+    public void updateEmployee(final Employee employee) throws EmployeeDaoException {
         employeeDao.updateEmployee(employee);
     }
 

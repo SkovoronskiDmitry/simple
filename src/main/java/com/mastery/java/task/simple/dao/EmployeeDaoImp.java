@@ -6,7 +6,6 @@ import com.mastery.java.task.simple.dto.Employee;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -61,21 +59,24 @@ public class EmployeeDaoImp implements EmployeeDao {
     }
 
     @Override
-    public Optional<Employee> findById(final Integer employeeId) {
+    public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
         LOGGER.info("Find employee by ID: " + employeeId);
-        final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
-        final List<Employee> resultList = template.query(FIND_BY_ID_SQL, namedParameters, employeeMapper);
-
-        final Employee employee = DataAccessUtils.uniqueResult(resultList);
-        return Optional.ofNullable(employee);
+        try {
+            final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
+            final Employee employee = template.queryForObject(FIND_BY_ID_SQL, namedParameters, employeeMapper);
+            return Optional.ofNullable(employee);
+        } catch (final RuntimeException ex) {
+            final String errorMessage = "Failed to get all employees";
+            throw new EmployeeDaoException(errorMessage, ex);
+        }
     }
 
     @Override
     public Long createEmployee(final Employee employee) throws EmployeeDaoException {
         LOGGER.info("Create a new employee: " + employee.toString());
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(CREATE_EMPLOYEE_SQL, mapSqlParameterSource(employee), keyHolder, new String[]{EMPLOYEE_ID});
         try {
+            final KeyHolder keyHolder = new GeneratedKeyHolder();
+            template.update(CREATE_EMPLOYEE_SQL, mapSqlParameterSource(employee), keyHolder, new String[]{EMPLOYEE_ID});
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
         } catch (final NullPointerException ex) {
             final String errorMassage = "Employee not created";
@@ -84,20 +85,24 @@ public class EmployeeDaoImp implements EmployeeDao {
     }
 
     @Override
-    public void updateEmployee(final Employee employee) {
+    public void updateEmployee(final Employee employee) throws EmployeeDaoException {
         LOGGER.info("Update the employee");
-
-        template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
+        try {
+            template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
+        } catch (final RuntimeException ex) {
+            final String errorMassage = "Check the employee passed to the method ";
+            throw new EmployeeDaoException(errorMassage, ex);
+        }
     }
 
     @Override
     public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
         LOGGER.info("Delete the employee with ID: " + employeeId);
-        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
         try {
+            final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
             return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);
         } catch (final RuntimeException ex) {
-            final String errorMassage = "Employee not found with ID:"+employeeId;
+            final String errorMassage = "Employee not found with ID:" + employeeId;
             throw new EmployeeDaoException(errorMassage, ex);
         }
     }

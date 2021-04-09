@@ -17,7 +17,6 @@
                      relativeToChangelogFile="true"
                      stripComments="true"
                      path="01-drop-employee-table.sql"/>
-
         </rollback>
 
     </changeSet>

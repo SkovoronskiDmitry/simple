@@ -24,37 +24,47 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @ApiOperation(value = "Get all employees",
-            response = Employee.class)
+    @ApiOperation(
+            value = "Get all employees",
+            response = Employee.class,
+            responseContainer = "List"
+    )
     @GetMapping(value = "/employee")
     public Collection<Employee> findAll() throws EmployeeDaoException {
         return employeeService.findAll();
     }
 
-    @ApiOperation(value = "Find employee by ID",
-            response = Employee.class)
+    @ApiOperation(
+            value = "Find employee by ID",
+            response = Employee.class
+    )
     @GetMapping(value = "/employee/{employeeId}")
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
-            @PathVariable final Integer employeeId) throws EmployeeNotFoundException {
+            @PathVariable final Integer employeeId) throws EmployeeNotFoundException, EmployeeDaoException {
         return employeeService.findById(employeeId).
                 orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 
-    @ApiOperation(value = "Create new Employee")
+    @ApiOperation(
+            value = "Create new Employee",
+            response = Long.class
+    )
     @PostMapping(value = "/createEmployee")
-    @ResponseStatus
     public Long createEmployee(
             @ApiParam(value = "New employee", required = true)
             @Valid @RequestBody final Employee employee) throws EmployeeDaoException {
         return employeeService.createEmployee(employee);
     }
 
-    @ApiOperation(value = "Update Employee")
+    @ApiOperation(
+            value = "Update Employee",
+            notes = "change the values departmentId and job title"
+    )
     @PutMapping(value = "/updateEmployee")
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
-            @RequestBody final Employee employee) {
+            @RequestBody final Employee employee) throws EmployeeDaoException {
         employeeService.updateEmployee(employee);
     }
 

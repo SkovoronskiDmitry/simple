@@ -1,11 +1,15 @@
 package com.mastery.java.task.simple.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@ApiModel(value = "Employee Model", subTypes = {Employee.class}, description = "Sample model for the documentation")
 public class Employee {
 
     private Long employeeId;
@@ -41,6 +45,7 @@ public class Employee {
         this.dateOfBirth = dateOfBirth;
     }
 
+    @ApiModelProperty(value = "Unique number id")
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -49,6 +54,7 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
+    @ApiModelProperty(value = "Employee firstname")
     public String getFirstName() {
         return firstName;
     }
@@ -57,6 +63,7 @@ public class Employee {
         this.firstName = firstName;
     }
 
+    @ApiModelProperty(value = "Employee lastname")
     public String getLastName() {
         return lastName;
     }
@@ -65,6 +72,7 @@ public class Employee {
         this.lastName = lastName;
     }
 
+    @ApiModelProperty(value = "Gender identity", allowableValues = "MALE, FEMALE")
     public String getGender() {
         return gender.toString();
     }
@@ -73,6 +81,7 @@ public class Employee {
         this.gender = Gender.valueOf(gender.toUpperCase());
     }
 
+    @ApiModelProperty(value = "Employee's department number")
     public Long getDepartmentId() {
         return departmentId;
     }
@@ -81,6 +90,7 @@ public class Employee {
         this.departmentId = departmentId;
     }
 
+    @ApiModelProperty(value = "Employee's job title")
     public String getJobTitle() {
         return jobTitle;
     }
@@ -89,6 +99,7 @@ public class Employee {
         this.jobTitle = jobTitle;
     }
 
+    @ApiModelProperty(value = "Employee's birthday")
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }

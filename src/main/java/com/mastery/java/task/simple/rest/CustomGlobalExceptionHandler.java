@@ -16,37 +16,16 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final static Logger LOGGER = Logger.getLogger(CustomGlobalExceptionHandler.class);
-
-    @ExceptionHandler(value = {DataAccessException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleDatabaseException(final DataAccessException ex) {
-        LOGGER.error("DataBase exception", ex);
-        return "Something went wrong, please try again";
-    }
-
-    @ExceptionHandler(value = {SQLException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleSqlException(final SQLException ex) {
-        LOGGER.error("sql exception", ex);
-        return "Try check sql";
-    }
-
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleIllegalArgument(final IllegalArgumentException ex) {
-        LOGGER.error("Arguments are invalid", ex);
-        return "Check type of arguments";
-    }
 
     @ExceptionHandler(value = {ClassNotFoundException.class})
     @ResponseBody
@@ -56,12 +35,18 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return "Employee not found, may be Employee with such ID didn't exist";
     }
 
-    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(value = {
+            Throwable.class,
+            DataAccessException.class,
+            SQLException.class,
+            IllegalArgumentException.class,
+            EmployeeDaoException.class
+    })
     @ResponseBody
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-    public String handleOtherException(final Exception ex) {
-        LOGGER.error("Something Wrong", ex);
-        return "Something going wrong";
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String uncaughtException(final Throwable ex) {
+        LOGGER.error("Unhandled exception caught!", ex);
+        return "Unhandled exception caught!";
     }
 
     @Override

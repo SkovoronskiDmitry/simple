@@ -69,7 +69,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    public void shouldFindEmployeeById() {
+    public void shouldFindEmployeeById() throws EmployeeDaoException {
         // given
         Mockito.when(employeeDao.findById(any(Integer.class))).thenReturn(Optional.ofNullable(employeeForTest));
 
@@ -102,7 +102,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    public void shouldUpdateEmployee() {
+    public void shouldUpdateEmployee() throws EmployeeDaoException {
         // given
         final Employee employeeForUpdate = new Employee("Alex",
                 "Poll",

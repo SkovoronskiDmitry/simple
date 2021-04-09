@@ -10,11 +10,11 @@ public interface EmployeeService {
 
     List<Employee> findAll() throws EmployeeDaoException;
 
-    Optional<Employee> findById(Integer id);
+    Optional<Employee> findById(Integer id) throws EmployeeDaoException;
 
     Long createEmployee(Employee employee) throws EmployeeDaoException;
 
-    void updateEmployee(Employee employee);
+    void updateEmployee(Employee employee) throws EmployeeDaoException;
 
     int deleteEmployee(Integer employeeId) throws EmployeeDaoException;
 }
