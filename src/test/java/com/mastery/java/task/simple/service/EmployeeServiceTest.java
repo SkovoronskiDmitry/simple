@@ -44,7 +44,7 @@ class EmployeeServiceTest {
     private EmployeeDaoImp employeeDao;
 
     @After
-    public void tirDown() {
+    public void tearDown() {
         verifyNoInteractions(employeeDao);
     }
 

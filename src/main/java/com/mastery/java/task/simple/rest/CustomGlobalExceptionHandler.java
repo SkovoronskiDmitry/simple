@@ -1,7 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
+import com.mastery.java.task.simple.dto.EntityForExceptionHandler;
+import com.mastery.java.task.simple.service.DateTimeService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -16,10 +19,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -27,26 +29,52 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     private final static Logger LOGGER = Logger.getLogger(CustomGlobalExceptionHandler.class);
 
+    private final DateTimeService dateTimeService;
+
+    @Autowired
+    public CustomGlobalExceptionHandler(final DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
+    }
+
     @ExceptionHandler(value = {ClassNotFoundException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleClassNotFound(final ClassNotFoundException ex) {
+    public EntityForExceptionHandler handleClassNotFound(final ClassNotFoundException ex) {
         LOGGER.error("Class not found", ex);
-        return "Employee not found, may be Employee with such ID didn't exist";
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.NOT_FOUND,
+                Collections.singletonList("Employee not found, may be Employee with such ID didn't exist")
+        );
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public EntityForExceptionHandler handleBedRequest(final IllegalArgumentException ex) {
+        LOGGER.error("Check request", ex);
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.BAD_REQUEST,
+                Collections.singletonList("Check request")
+        );
     }
 
     @ExceptionHandler(value = {
             Throwable.class,
             DataAccessException.class,
             SQLException.class,
-            IllegalArgumentException.class,
             EmployeeDaoException.class
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String uncaughtException(final Throwable ex) {
+    public EntityForExceptionHandler uncaughtException(final Throwable ex) {
         LOGGER.error("Unhandled exception caught!", ex);
-        return "Unhandled exception caught!";
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                Collections.singletonList("Unhandled exception caught!")
+        );
     }
 
     @Override
@@ -55,19 +83,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
 
-        final Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", new Date());
-        body.put("status", status.value());
-
-        //Get all errors from DTO fields
         final List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        body.put("errors", errors);
+        final EntityForExceptionHandler entityForExceptionHandler =
+                new EntityForExceptionHandler(dateTimeService.getCurrentDate(), status, errors);
 
-        return new ResponseEntity<>(body, headers, status);
+        return new ResponseEntity<>(entityForExceptionHandler, headers, status);
     }
 }

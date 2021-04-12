@@ -4,16 +4,14 @@ import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.EmployeeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
-@Api(value = "Employees", description = "APIs for working with employees")
+@Api(value = "Employees")
 @RestController
 public class EmployeeController {
 
@@ -29,6 +27,12 @@ public class EmployeeController {
             response = Employee.class,
             responseContainer = "List"
     )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully find all employees"),
+            @ApiResponse(code = 400, message = "Missing or invalid request body"),
+            @ApiResponse(code = 404, message = "Employees or resource not found"),
+            @ApiResponse(code = 500, message = "Internal error")
+    })
     @GetMapping(value = "/employee")
     public Collection<Employee> findAll() throws EmployeeDaoException {
         return employeeService.findAll();
@@ -38,6 +42,12 @@ public class EmployeeController {
             value = "Find employee by ID",
             response = Employee.class
     )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully find employee by ID"),
+            @ApiResponse(code = 400, message = "Missing or invalid employee's ID"),
+            @ApiResponse(code = 404, message = "Employee or resource not found"),
+            @ApiResponse(code = 500, message = "Internal error")
+    })
     @GetMapping(value = "/employee/{employeeId}")
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
@@ -50,6 +60,11 @@ public class EmployeeController {
             value = "Create new Employee",
             response = Long.class
     )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee created successfully"),
+            @ApiResponse(code = 400, message = "Missing or invalid employee"),
+            @ApiResponse(code = 500, message = "Internal error")
+    })
     @PostMapping(value = "/createEmployee")
     public Long createEmployee(
             @ApiParam(value = "New employee", required = true)
@@ -61,6 +76,12 @@ public class EmployeeController {
             value = "Update Employee",
             notes = "change the values departmentId and job title"
     )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Employee successfully update"),
+            @ApiResponse(code = 400, message = "Missing or invalid employee"),
+            @ApiResponse(code = 404, message = "Employee or resource not found"),
+            @ApiResponse(code = 500, message = "Internal error")
+    })
     @PutMapping(value = "/updateEmployee")
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
@@ -69,6 +90,12 @@ public class EmployeeController {
     }
 
     @ApiOperation(value = "Delete Employee by ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee successfully delete"),
+            @ApiResponse(code = 400, message = "Missing or invalid employee's ID"),
+            @ApiResponse(code = 404, message = "Employee or resource not found"),
+            @ApiResponse(code = 500, message = "Internal error")
+    })
     @DeleteMapping(value = "/deleteEmployee/{employeeId}")
     public int deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
