@@ -2,6 +2,7 @@ package com.mastery.java.task.simple.dao;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
+import com.mastery.java.task.simple.dao.field.SqlRequests;
 import com.mastery.java.task.simple.dto.Employee;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,11 @@ public class EmployeeDaoImp implements EmployeeDao {
     private static final String GENDER = EmployeeColumnNames.GENDER;
     private static final String DATE_OF_BIRTH = EmployeeColumnNames.DATE_OF_BIRTH;
 
-    private static final String FIND_ALL_SQL = "SELECT * FROM employee";
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM employee WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
-    private static final String CREATE_EMPLOYEE_SQL = "INSERT INTO employee (" + FIRST_NAME + ", " + LAST_NAME + " ," + DEPARTMENT_ID + ", " + JOB_TITLE + ", " + GENDER + ", " + DATE_OF_BIRTH + ") VALUES (:" + FIRST_NAME + ", :" + LAST_NAME + ", :" + DEPARTMENT_ID + ", :" + JOB_TITLE + ", :" + GENDER + ", :" + DATE_OF_BIRTH + ")";
-    private static final String UPDATE_EMPLOYEE_SQL = "UPDATE employee SET " + DEPARTMENT_ID + " = :" + DEPARTMENT_ID + ", " + JOB_TITLE + " = :" + JOB_TITLE + " WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
-    private static final String DELETE_EMPLOYEE_SQL = "DELETE FROM employee WHERE " + EMPLOYEE_ID + " = :" + EMPLOYEE_ID;
+    private static final String FIND_ALL_SQL = SqlRequests.FIND_ALL_SQL;
+    private static final String FIND_BY_ID_SQL = SqlRequests.FIND_BY_ID_SQL;
+    private static final String CREATE_EMPLOYEE_SQL = SqlRequests.CREATE_EMPLOYEE_SQL;
+    private static final String UPDATE_EMPLOYEE_SQL = SqlRequests.UPDATE_EMPLOYEE_SQL;
+    private static final String DELETE_EMPLOYEE_SQL = SqlRequests.DELETE_EMPLOYEE_SQL;
 
     private final NamedParameterJdbcTemplate template;
     private final EmployeeMapper employeeMapper;
@@ -66,7 +67,7 @@ public class EmployeeDaoImp implements EmployeeDao {
             final Employee employee = template.queryForObject(FIND_BY_ID_SQL, namedParameters, employeeMapper);
             return Optional.ofNullable(employee);
         } catch (final RuntimeException ex) {
-            final String errorMessage = "Failed to get all employees";
+            final String errorMessage = "Failed to get employee by ID";
             throw new EmployeeDaoException(errorMessage, ex);
         }
     }
