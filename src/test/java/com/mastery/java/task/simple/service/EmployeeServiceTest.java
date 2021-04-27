@@ -77,7 +77,6 @@ class EmployeeServiceTest {
 
         // then
         Mockito.verify(employeeDao, Mockito.times(1)).findById(0);
-        Assertions.assertTrue(optionalEmployee.isPresent());
         assertThat(optionalEmployee, CoreMatchers.notNullValue());
         assertThat(employeeForTest.getFirstName(), CoreMatchers.is(optionalEmployee.get().getFirstName()));
         assertThat(employeeForTest.getLastName(), CoreMatchers.is(optionalEmployee.get().getLastName()));
@@ -120,11 +119,11 @@ class EmployeeServiceTest {
         // then
         Mockito.verify(employeeDao, Mockito.times(1)).updateEmployee(employeeForUpdate);
         assertThat(employeeForTest.getFirstName(), CoreMatchers.is(employeeForUpdate.getFirstName()));
-        Assertions.assertEquals(employeeForTest.getLastName(), employeeForUpdate.getLastName());
-        Assertions.assertEquals(employeeForTest.getDepartmentId(), employeeForUpdate.getDepartmentId());
-        Assertions.assertEquals(employeeForTest.getJobTitle(), employeeForUpdate.getJobTitle());
-        Assertions.assertEquals(employeeForTest.getGender(), employeeForUpdate.getGender());
-        Assertions.assertEquals(employeeForTest.getDateOfBirth(), employeeForUpdate.getDateOfBirth());
+        assertThat(employeeForTest.getLastName(), CoreMatchers.is(employeeForUpdate.getLastName()));
+        assertThat(employeeForTest.getDepartmentId(), CoreMatchers.is(employeeForUpdate.getDepartmentId()));
+        assertThat(employeeForTest.getJobTitle(), CoreMatchers.is(employeeForUpdate.getJobTitle()));
+        assertThat(employeeForTest.getGender(), CoreMatchers.is(employeeForUpdate.getGender()));
+        assertThat(employeeForTest.getDateOfBirth(), CoreMatchers.is(employeeForUpdate.getDateOfBirth()));
     }
 
     @Test

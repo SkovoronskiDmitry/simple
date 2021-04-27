@@ -6,6 +6,7 @@ import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.EmployeeService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import java.util.Collection;
 
 @Api(value = "Employees")
 @RestController
+@RequestMapping(value = "/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -28,12 +30,12 @@ public class EmployeeController {
             responseContainer = "List"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully find all employees"),
-            @ApiResponse(code = 400, message = "Missing or invalid request body"),
-            @ApiResponse(code = 404, message = "Employees or resource not found"),
-            @ApiResponse(code = 500, message = "Internal error")
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response")
     })
-    @GetMapping(value = "/employee")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Employee> findAll() throws EmployeeDaoException {
         return employeeService.findAll();
     }
@@ -43,12 +45,12 @@ public class EmployeeController {
             response = Employee.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully find employee by ID"),
-            @ApiResponse(code = 400, message = "Missing or invalid employee's ID"),
-            @ApiResponse(code = 404, message = "Employee or resource not found"),
-            @ApiResponse(code = 500, message = "Internal error")
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response")
     })
-    @GetMapping(value = "/employee/{employeeId}")
+    @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
             @PathVariable final Integer employeeId) throws EmployeeNotFoundException, EmployeeDaoException {
@@ -61,11 +63,11 @@ public class EmployeeController {
             response = Long.class
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Employee created successfully"),
-            @ApiResponse(code = 400, message = "Missing or invalid employee"),
-            @ApiResponse(code = 500, message = "Internal error")
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response")
     })
-    @PostMapping(value = "/createEmployee")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Long createEmployee(
             @ApiParam(value = "New employee", required = true)
             @Valid @RequestBody final Employee employee) throws EmployeeDaoException {
@@ -77,12 +79,12 @@ public class EmployeeController {
             notes = "change the values departmentId and job title"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Employee successfully update"),
-            @ApiResponse(code = 400, message = "Missing or invalid employee"),
-            @ApiResponse(code = 404, message = "Employee or resource not found"),
-            @ApiResponse(code = 500, message = "Internal error")
+            @ApiResponse(code = 201, message = "New Employee has been created"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response")
     })
-    @PutMapping(value = "/updateEmployee")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
             @RequestBody final Employee employee) throws EmployeeDaoException {
@@ -91,12 +93,12 @@ public class EmployeeController {
 
     @ApiOperation(value = "Delete Employee by ID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Employee successfully delete"),
-            @ApiResponse(code = 400, message = "Missing or invalid employee's ID"),
-            @ApiResponse(code = 404, message = "Employee or resource not found"),
-            @ApiResponse(code = 500, message = "Internal error")
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response")
     })
-    @DeleteMapping(value = "/deleteEmployee/{employeeId}")
+    @DeleteMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public int deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
             @PathVariable final Integer employeeId) throws EmployeeDaoException {

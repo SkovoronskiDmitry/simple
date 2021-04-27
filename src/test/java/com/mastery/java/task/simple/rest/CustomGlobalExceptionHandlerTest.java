@@ -56,7 +56,7 @@ class CustomGlobalExceptionHandlerTest {
         Assertions.assertNotNull(entityForExceptionHandler);
         assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
         assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.NOT_FOUND));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Employee not found, may be Employee with such ID didn't exist")));
+        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Not found — There is no resource behind the URI")));
     }
 
     @Test
@@ -73,7 +73,7 @@ class CustomGlobalExceptionHandlerTest {
         Assertions.assertNotNull(entityForExceptionHandler);
         assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
         assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.BAD_REQUEST));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Check request")));
+        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid")));
     }
 
     @Test
@@ -91,6 +91,6 @@ class CustomGlobalExceptionHandlerTest {
         Assertions.assertNotNull(entityForExceptionHandler);
         assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
         assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Unhandled exception caught!")));
+        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")));
     }
 }

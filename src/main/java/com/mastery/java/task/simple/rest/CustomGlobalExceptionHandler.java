@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new EntityForExceptionHandler(
                 dateTimeService.getCurrentDate(),
                 HttpStatus.NOT_FOUND,
-                Collections.singletonList("Employee not found, may be Employee with such ID didn't exist")
+                Collections.singletonList("Not found — There is no resource behind the URI")
         );
     }
 
@@ -56,7 +55,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new EntityForExceptionHandler(
                 dateTimeService.getCurrentDate(),
                 HttpStatus.BAD_REQUEST,
-                Collections.singletonList("Check request")
+                Collections.singletonList("Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid")
         );
     }
 
@@ -73,7 +72,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new EntityForExceptionHandler(
                 dateTimeService.getCurrentDate(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                Collections.singletonList("Unhandled exception caught!")
+                Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")
         );
     }
 
