@@ -27,7 +27,12 @@ public class EmployeeController {
     @ApiOperation(
             value = "Get all employees",
             response = Employee.class,
-            responseContainer = "List"
+            responseContainer = "List",
+            authorizations = {
+                    @Authorization(
+                            value = "Employees",
+                            scopes = {@AuthorizationScope(scope = "find:employees", description = "find all employees")}
+                    )}
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Everything is working"),
@@ -42,8 +47,12 @@ public class EmployeeController {
 
     @ApiOperation(
             value = "Find employee by ID",
-            response = Employee.class
-    )
+            response = Employee.class,
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "find:employee", description = "find employee by ID")}
+                    )})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Everything is working"),
             @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
@@ -60,7 +69,12 @@ public class EmployeeController {
 
     @ApiOperation(
             value = "Create new Employee",
-            response = Long.class
+            response = Long.class,
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "create:employee", description = "create new employee")}
+                    )}
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Everything is working"),
@@ -76,7 +90,12 @@ public class EmployeeController {
 
     @ApiOperation(
             value = "Update Employee",
-            notes = "change the values departmentId and job title"
+            notes = "change the values departmentId and job title",
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "update:employee", description = "update employee")}
+                    )}
     )
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Employee has been created"),
@@ -91,7 +110,12 @@ public class EmployeeController {
         employeeService.updateEmployee(employee);
     }
 
-    @ApiOperation(value = "Delete Employee by ID")
+    @ApiOperation(value = "Delete Employee by ID",
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "delete:employee", description = "delete employee by ID")}
+                    )})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Everything is working"),
             @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),

@@ -1,12 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
-import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.EntityForExceptionHandler;
 import com.mastery.java.task.simple.service.DateTimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomGlobalExceptionHandler {
 
     private final static Logger LOGGER = Logger.getLogger(CustomGlobalExceptionHandler.class);
 
@@ -59,12 +55,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         );
     }
 
-    @ExceptionHandler(value = {
-            Throwable.class,
-            DataAccessException.class,
-            SQLException.class,
-            EmployeeDaoException.class
-    })
+    @ExceptionHandler(value = {Throwable.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public EntityForExceptionHandler uncaughtException(final Throwable ex) {
@@ -76,7 +67,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         );
     }
 
-    @Override
+
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
                                                                   final HttpHeaders headers,
                                                                   final HttpStatus status,

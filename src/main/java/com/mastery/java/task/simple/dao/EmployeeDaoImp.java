@@ -87,7 +87,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Update the employee");
+        LOGGER.info("Update the employee: "+ employee.toString());
         try {
             template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
         } catch (final RuntimeException ex) {

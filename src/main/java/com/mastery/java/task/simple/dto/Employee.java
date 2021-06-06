@@ -45,7 +45,7 @@ public class Employee {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @ApiModelProperty(value = "Unique number id")
+    @ApiModelProperty(value = "Unique number id", example = "1", required = true, position = 1)
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -54,7 +54,7 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
-    @ApiModelProperty(value = "Employee firstname")
+    @ApiModelProperty(value = "Employee firstname", example = "John", required = true, position = 2)
     public String getFirstName() {
         return firstName;
     }
@@ -63,7 +63,7 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    @ApiModelProperty(value = "Employee lastname")
+    @ApiModelProperty(value = "Employee lastname", example = "Smith", required = true, position = 3)
     public String getLastName() {
         return lastName;
     }
@@ -72,7 +72,7 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    @ApiModelProperty(value = "Gender identity", allowableValues = "MALE, FEMALE")
+    @ApiModelProperty(value = "Gender identity", allowableValues = "MALE, FEMALE", required = true, position = 5)
     public String getGender() {
         return gender.toString();
     }
@@ -81,7 +81,7 @@ public class Employee {
         this.gender = Gender.valueOf(gender.toUpperCase());
     }
 
-    @ApiModelProperty(value = "Employee's department number")
+    @ApiModelProperty(value = "Employee's department number", example = "9", required = true, position = 6)
     public Long getDepartmentId() {
         return departmentId;
     }
@@ -90,7 +90,7 @@ public class Employee {
         this.departmentId = departmentId;
     }
 
-    @ApiModelProperty(value = "Employee's job title")
+    @ApiModelProperty(value = "Employee's job title", example = "boss", required = true, position = 7)
     public String getJobTitle() {
         return jobTitle;
     }
@@ -99,7 +99,7 @@ public class Employee {
         this.jobTitle = jobTitle;
     }
 
-    @ApiModelProperty(value = "Employee's birthday")
+    @ApiModelProperty(value = "Employee's birthday", example = "2007-12-25", required = true, position = 4)
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
