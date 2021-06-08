@@ -1,10 +1,12 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.EntityForExceptionHandler;
+import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.DateTimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +33,15 @@ public class CustomGlobalExceptionHandler {
         this.dateTimeService = dateTimeService;
     }
 
-    @ExceptionHandler(value = {ClassNotFoundException.class})
+    @ExceptionHandler(value = {EmployeeNotFoundException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public EntityForExceptionHandler handleClassNotFound(final ClassNotFoundException ex) {
-        LOGGER.error("Class not found", ex);
+    public EntityForExceptionHandler handleEmployeeNotFoundException(final EmployeeNotFoundException ex) {
+        LOGGER.error("Not found", ex);
         return new EntityForExceptionHandler(
                 dateTimeService.getCurrentDate(),
                 HttpStatus.NOT_FOUND,
-                Collections.singletonList("Not found — There is no resource behind the URI")
+                Collections.singletonList("Employee not found.")
         );
     }
 
@@ -47,11 +49,47 @@ public class CustomGlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public EntityForExceptionHandler handleBedRequest(final IllegalArgumentException ex) {
-        LOGGER.error("Check request", ex);
+        LOGGER.error("Bad Request", ex);
         return new EntityForExceptionHandler(
                 dateTimeService.getCurrentDate(),
                 HttpStatus.BAD_REQUEST,
-                Collections.singletonList("Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid")
+                Collections.singletonList("Bad Request — The request was invalid or cannot be served.")
+        );
+    }
+
+    @ExceptionHandler(value = {DataAccessException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public EntityForExceptionHandler handleDataAccessException(final DataAccessException ex) {
+        LOGGER.error("Internal Server Error", ex);
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                Collections.singletonList("An error occurred while accessing the database.")
+        );
+    }
+
+    @ExceptionHandler(value = {NullPointerException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public EntityForExceptionHandler handleNullPointerException(final NullPointerException ex) {
+        LOGGER.error("Internal Server Error", ex);
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                Collections.singletonList("Received null in a case where an object is required.")
+        );
+    }
+
+    @ExceptionHandler(value = {RuntimeException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public EntityForExceptionHandler handleRuntimeException(final RuntimeException ex) {
+        LOGGER.error("Internal Server Error", ex);
+        return new EntityForExceptionHandler(
+                dateTimeService.getCurrentDate(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                Collections.singletonList("Thrown during the normal operation of the JVM.")
         );
     }
 
