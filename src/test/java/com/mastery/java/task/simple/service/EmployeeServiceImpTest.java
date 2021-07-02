@@ -3,6 +3,7 @@ package com.mastery.java.task.simple.service;
 import com.mastery.java.task.simple.SimpleApplication;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
+import com.mastery.java.task.simple.service.employee.EmployeeService;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

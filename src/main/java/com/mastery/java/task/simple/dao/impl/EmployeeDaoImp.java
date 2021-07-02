@@ -1,5 +1,7 @@
-package com.mastery.java.task.simple.dao;
+package com.mastery.java.task.simple.dao.impl;
 
+import com.mastery.java.task.simple.dao.EmployeeDao;
+import com.mastery.java.task.simple.dao.mapper.EmployeeMapper;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
 import com.mastery.java.task.simple.dao.field.SqlRequests;
@@ -61,13 +63,13 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
-        LOGGER.info("Find employee by ID: " + employeeId);
+        LOGGER.info("Find employee by ID:" + employeeId);
         try {
             final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
             final Employee employee = template.queryForObject(FIND_BY_ID_SQL, namedParameters, employeeMapper);
             return Optional.ofNullable(employee);
-        } catch (final RuntimeException ex) {
-            final String errorMessage = "Failed to get employee by ID";
+        } catch (final DataAccessException ex) {
+            final String errorMessage = String.format("Failed to get employee by ID: %s", employeeId);
             throw new EmployeeDaoException(errorMessage, ex);
         }
     }
@@ -79,6 +81,8 @@ public class EmployeeDaoImp implements EmployeeDao {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(CREATE_EMPLOYEE_SQL, mapSqlParameterSource(employee), keyHolder, new String[]{EMPLOYEE_ID});
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        } catch (final DataAccessException ex) {
+            throw new EmployeeDaoException("Some issues with SQL", ex);
         } catch (final NullPointerException ex) {
             final String errorMassage = "Employee not created";
             throw new EmployeeDaoException(errorMassage, ex);
@@ -87,11 +91,11 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Update the employee: "+ employee.toString());
+        LOGGER.info("Update the employee: " + employee.toString());
         try {
             template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
         } catch (final RuntimeException ex) {
-            final String errorMassage = "Check the employee passed to the method ";
+            final String errorMassage = "Check the employee passed to the method";
             throw new EmployeeDaoException(errorMassage, ex);
         }
     }
@@ -103,7 +107,7 @@ public class EmployeeDaoImp implements EmployeeDao {
             final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
             return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);
         } catch (final RuntimeException ex) {
-            final String errorMassage = "Employee not found with ID:" + employeeId;
+            final String errorMassage = "Employee not found with ID: " + employeeId;
             throw new EmployeeDaoException(errorMassage, ex);
         }
     }

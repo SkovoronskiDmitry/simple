@@ -1,8 +1,8 @@
 package com.mastery.java.task.simple.rest;
 
-import com.mastery.java.task.simple.dto.EntityForExceptionHandler;
+import com.mastery.java.task.simple.dto.ErrorDto;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
-import com.mastery.java.task.simple.service.DateTimeService;
+import com.mastery.java.task.simple.service.datatime.DateTimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -36,75 +36,47 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = {EmployeeNotFoundException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public EntityForExceptionHandler handleEmployeeNotFoundException(final EmployeeNotFoundException ex) {
+    public ErrorDto handleEmployeeNotFoundException(final EmployeeNotFoundException ex) {
         LOGGER.error("Not found", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.NOT_FOUND,
-                Collections.singletonList("Employee not found.")
+        return createErrorDto(HttpStatus.NOT_FOUND, "Employee not found."
         );
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public EntityForExceptionHandler handleBedRequest(final IllegalArgumentException ex) {
+    public ErrorDto handleBedRequest(final IllegalArgumentException ex) {
         LOGGER.error("Bad Request", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.BAD_REQUEST,
-                Collections.singletonList("Bad Request — The request was invalid or cannot be served.")
+        return createErrorDto(HttpStatus.BAD_REQUEST, "Bad Request — The request was invalid or cannot be served."
         );
     }
 
     @ExceptionHandler(value = {DataAccessException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public EntityForExceptionHandler handleDataAccessException(final DataAccessException ex) {
+    public ErrorDto handleDataAccessException(final DataAccessException ex) {
         LOGGER.error("Internal Server Error", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                Collections.singletonList("An error occurred while accessing the database.")
-        );
-    }
-
-    @ExceptionHandler(value = {NullPointerException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public EntityForExceptionHandler handleNullPointerException(final NullPointerException ex) {
-        LOGGER.error("Internal Server Error", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                Collections.singletonList("Received null in a case where an object is required.")
-        );
-    }
-
-    @ExceptionHandler(value = {RuntimeException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public EntityForExceptionHandler handleRuntimeException(final RuntimeException ex) {
-        LOGGER.error("Internal Server Error", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                Collections.singletonList("Thrown during the normal operation of the JVM.")
+        return createErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while accessing the database."
         );
     }
 
     @ExceptionHandler(value = {Throwable.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public EntityForExceptionHandler uncaughtException(final Throwable ex) {
+    public ErrorDto uncaughtException(final Throwable ex) {
         LOGGER.error("Unhandled exception caught!", ex);
-        return new EntityForExceptionHandler(
-                dateTimeService.getCurrentDate(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")
+        return createErrorDto(HttpStatus.INTERNAL_SERVER_ERROR,
+                "API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response."
         );
     }
 
+    private ErrorDto createErrorDto(final HttpStatus status, final String errorMessage) {
+        return new ErrorDto(
+                dateTimeService.getCurrentDate(),
+                status,
+                Collections.singletonList(errorMessage)
+        );
+    }
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
                                                                   final HttpHeaders headers,
@@ -117,9 +89,9 @@ public class CustomGlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        final EntityForExceptionHandler entityForExceptionHandler =
-                new EntityForExceptionHandler(dateTimeService.getCurrentDate(), status, errors);
+        final ErrorDto errorDto =
+                new ErrorDto(dateTimeService.getCurrentDate(), status, errors);
 
-        return new ResponseEntity<>(entityForExceptionHandler, headers, status);
+        return new ResponseEntity<>(errorDto, headers, status);
     }
 }

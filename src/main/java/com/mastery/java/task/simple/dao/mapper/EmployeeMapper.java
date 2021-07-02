@@ -1,4 +1,4 @@
-package com.mastery.java.task.simple.dao;
+package com.mastery.java.task.simple.dao.mapper;
 
 import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
 import com.mastery.java.task.simple.dto.Employee;

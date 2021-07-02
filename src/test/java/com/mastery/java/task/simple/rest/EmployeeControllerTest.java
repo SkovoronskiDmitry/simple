@@ -2,7 +2,7 @@ package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
-import com.mastery.java.task.simple.service.EmployeeService;
+import com.mastery.java.task.simple.service.employee.EmployeeService;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.After;

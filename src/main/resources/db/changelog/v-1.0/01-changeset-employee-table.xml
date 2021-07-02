@@ -11,14 +11,13 @@
                  relativeToChangelogFile="true"
                  stripComments="true"
                  path="01-create-employee-table.sql"/>
-        <rollback >
+        <rollback>
             <sqlFile encoding="utf8"
                      endDelimiter="\nGO"
                      relativeToChangelogFile="true"
                      stripComments="true"
                      path="01-drop-employee-table.sql"/>
         </rollback>
-
     </changeSet>
 
 </databaseChangeLog>

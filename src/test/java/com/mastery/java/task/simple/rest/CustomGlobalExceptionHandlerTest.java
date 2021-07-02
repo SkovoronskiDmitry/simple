@@ -1,8 +1,8 @@
 package com.mastery.java.task.simple.rest;
 
-import com.mastery.java.task.simple.dto.EntityForExceptionHandler;
+import com.mastery.java.task.simple.dto.ErrorDto;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
-import com.mastery.java.task.simple.service.DateTimeService;
+import com.mastery.java.task.simple.service.datatime.DateTimeService;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.jupiter.api.Assertions;
@@ -51,14 +51,14 @@ class CustomGlobalExceptionHandlerTest {
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);
 
         //when
-        final EntityForExceptionHandler entityForExceptionHandler =
+        final ErrorDto errorDto =
                 customGlobalExceptionHandler.handleEmployeeNotFoundException(employeeNotFoundException);
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.NOT_FOUND));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Employee not found.")));
+        Assertions.assertNotNull(errorDto);
+        assertThat(errorDto.getDate(), CoreMatchers.is(DATE));
+        assertThat(errorDto.getHttpStatus(), CoreMatchers.is(HttpStatus.NOT_FOUND));
+        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("Employee not found.")));
     }
 
     @Test
@@ -68,14 +68,14 @@ class CustomGlobalExceptionHandlerTest {
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);
 
         //when
-        final EntityForExceptionHandler entityForExceptionHandler =
+        final ErrorDto errorDto =
                 customGlobalExceptionHandler.handleBedRequest(illegalArgumentException);
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.BAD_REQUEST));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Bad Request — The request was invalid or cannot be served.")));
+        Assertions.assertNotNull(errorDto);
+        assertThat(errorDto.getDate(), CoreMatchers.is(DATE));
+        assertThat(errorDto.getHttpStatus(), CoreMatchers.is(HttpStatus.BAD_REQUEST));
+        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("Bad Request — The request was invalid or cannot be served.")));
     }
 
     @Test
@@ -85,51 +85,15 @@ class CustomGlobalExceptionHandlerTest {
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);
 
         //when
-        final EntityForExceptionHandler entityForExceptionHandler =
+        final ErrorDto errorDto =
                 customGlobalExceptionHandler.handleDataAccessException(dataAccessException);
 
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("An error occurred while accessing the database.")));
-    }
-
-    @Test
-    void teatHandleNullPointerException() {
-        //given
-        final NullPointerException nullPointerException = new NullPointerException();
-        when(dateTimeService.getCurrentDate()).thenReturn(DATE);
-
-        //when
-        final EntityForExceptionHandler entityForExceptionHandler =
-                customGlobalExceptionHandler.handleNullPointerException(nullPointerException);
-
-        //then
-        Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Received null in a case where an object is required.")));
-    }
-
-    @Test
-    void teatHandleRuntimeException() {
-        //given
-        final RuntimeException runtimeException = new RuntimeException();
-        when(dateTimeService.getCurrentDate()).thenReturn(DATE);
-
-        //when
-        final EntityForExceptionHandler entityForExceptionHandler =
-                customGlobalExceptionHandler.handleRuntimeException(runtimeException);
-
-        //then
-        Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("Thrown during the normal operation of the JVM.")));
+        Assertions.assertNotNull(errorDto);
+        assertThat(errorDto.getDate(), CoreMatchers.is(DATE));
+        assertThat(errorDto.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("An error occurred while accessing the database.")));
     }
 
     @Test
@@ -139,14 +103,14 @@ class CustomGlobalExceptionHandlerTest {
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);
 
         //when
-        final EntityForExceptionHandler entityForExceptionHandler =
+        final ErrorDto errorDto =
                 customGlobalExceptionHandler.uncaughtException(throwable);
 
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
-        Assertions.assertNotNull(entityForExceptionHandler);
-        assertThat(entityForExceptionHandler.getDate(), CoreMatchers.is(DATE));
-        assertThat(entityForExceptionHandler.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(entityForExceptionHandler.getError(), CoreMatchers.is(Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")));
+        Assertions.assertNotNull(errorDto);
+        assertThat(errorDto.getDate(), CoreMatchers.is(DATE));
+        assertThat(errorDto.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")));
     }
 }

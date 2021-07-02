@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public final class EntityForExceptionHandler {
+public final class ErrorDto {
 
     private Date date;
 
@@ -14,10 +14,10 @@ public final class EntityForExceptionHandler {
 
     private List<String> error;
 
-    public EntityForExceptionHandler() {
+    public ErrorDto() {
     }
 
-    public EntityForExceptionHandler(
+    public ErrorDto(
             Date date,
             HttpStatus httpStatus,
             List<String> error
@@ -55,7 +55,7 @@ public final class EntityForExceptionHandler {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EntityForExceptionHandler that = (EntityForExceptionHandler) o;
+        ErrorDto that = (ErrorDto) o;
         return Objects.equals(date, that.date) && httpStatus == that.httpStatus && Objects.equals(error, that.error);
     }
 

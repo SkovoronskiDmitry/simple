@@ -1,4 +1,4 @@
-package com.mastery.java.task.simple.service;
+package com.mastery.java.task.simple.service.employee;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;

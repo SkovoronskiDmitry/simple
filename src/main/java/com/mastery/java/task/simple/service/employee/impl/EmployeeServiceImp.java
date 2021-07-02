@@ -1,8 +1,9 @@
-package com.mastery.java.task.simple.service;
+package com.mastery.java.task.simple.service.employee.impl;
 
 import com.mastery.java.task.simple.dao.EmployeeDao;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
+import com.mastery.java.task.simple.service.employee.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public Long createEmployee(final Employee employee) throws EmployeeDaoException {
         if (employee.getEmployeeId() != null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Employee ID is null");
         }
         return employeeDao.createEmployee(employee);
     }
