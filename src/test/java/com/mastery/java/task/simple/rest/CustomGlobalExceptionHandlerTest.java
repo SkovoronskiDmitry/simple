@@ -111,6 +111,6 @@ class CustomGlobalExceptionHandlerTest {
         Assertions.assertNotNull(errorDto);
         assertThat(errorDto.getDate(), CoreMatchers.is(DATE));
         assertThat(errorDto.getHttpStatus(), CoreMatchers.is(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged and not returned as response.")));
+        assertThat(errorDto.getError(), CoreMatchers.is(Collections.singletonList("API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response.")));
     }
 }

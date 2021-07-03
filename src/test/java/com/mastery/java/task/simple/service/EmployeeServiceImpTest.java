@@ -4,7 +4,8 @@ import com.mastery.java.task.simple.SimpleApplication;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @SpringBootTest(classes = SimpleApplication.class)
 class EmployeeServiceImpTest {
 
-    private static final Logger LOGGER = Logger.getLogger(EmployeeServiceImpTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeServiceImpTest.class);
 
     private final static Employee EMPLOYEE = new Employee("Alex", "Poll",
             "male", 8L,
@@ -39,7 +40,7 @@ class EmployeeServiceImpTest {
     @Test
     void ShouldCreateEmployee() throws EmployeeDaoException {
         Long newEmployeeId = employeeService.createEmployee(EMPLOYEE);
-        LOGGER.info("TEST method: Employee created with ID:" + newEmployeeId);
+        LOGGER.info("TEST method: Employee created with ID: {}", newEmployeeId);
         Assertions.assertNotNull(newEmployeeId);
     }
 
@@ -49,7 +50,7 @@ class EmployeeServiceImpTest {
 
         Optional<Employee> optionalEmployee = employeeService.findById(Math.toIntExact(newEmployeeId));
 
-        LOGGER.info("TEST method: Find Employee by ID: " + newEmployeeId + optionalEmployee.get());
+        LOGGER.info("TEST method: Find Employee by ID: {} {}", newEmployeeId, optionalEmployee.get());
 
         Assertions.assertTrue(optionalEmployee.isPresent());
         Assertions.assertEquals(optionalEmployee.get().getEmployeeId(), newEmployeeId);
@@ -70,7 +71,7 @@ class EmployeeServiceImpTest {
 
         employeeForUpdate.setDepartmentId(777l);
         employeeForUpdate.setJobTitle("worker");
-        LOGGER.info("TEST method: Update Employee:" + EMPLOYEE.equals(employeeForUpdate));
+        LOGGER.info("TEST method: Update Employee: {}", EMPLOYEE.equals(employeeForUpdate));
         employeeService.updateEmployee(employeeForUpdate);
         Assertions.assertEquals(EMPLOYEE.getEmployeeId(), employeeForUpdate.getEmployeeId());
         Assertions.assertEquals(EMPLOYEE.getFirstName(), employeeForUpdate.getFirstName());
@@ -90,7 +91,7 @@ class EmployeeServiceImpTest {
 
         List<Employee> employeesFlightAfterDelete = employeeService.findAll();
         Assertions.assertNotNull(employeesFlightAfterDelete);
-        LOGGER.info("TEST method: Delete Employee:" + (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
+        LOGGER.info("TEST method: Delete Employee: {}" , (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
         Assertions.assertEquals(employeesFlightAfterDelete.size(), employeeList.size() - 1);
     }
 }

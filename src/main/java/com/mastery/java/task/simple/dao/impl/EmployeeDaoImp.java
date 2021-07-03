@@ -1,12 +1,13 @@
 package com.mastery.java.task.simple.dao.impl;
 
 import com.mastery.java.task.simple.dao.EmployeeDao;
-import com.mastery.java.task.simple.dao.mapper.EmployeeMapper;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
 import com.mastery.java.task.simple.dao.field.SqlRequests;
+import com.mastery.java.task.simple.dao.mapper.EmployeeMapper;
 import com.mastery.java.task.simple.dto.Employee;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,7 +26,7 @@ import java.util.Optional;
 @Transactional
 public class EmployeeDaoImp implements EmployeeDao {
 
-    private final static Logger LOGGER = Logger.getLogger(EmployeeDaoImp.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImp.class);
 
     private static final String EMPLOYEE_ID = EmployeeColumnNames.EMPLOYEE_ID;
     private static final String FIRST_NAME = EmployeeColumnNames.FIRST_NAME;
@@ -56,14 +57,13 @@ public class EmployeeDaoImp implements EmployeeDao {
         try {
             return template.query(FIND_ALL_SQL, employeeMapper);
         } catch (final DataAccessException ex) {
-            final String errorMessage = "Failed to get all employees";
-            throw new EmployeeDaoException(errorMessage, ex);
+            throw new EmployeeDaoException("Failed to get all employees", ex);
         }
     }
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
-        LOGGER.info("Find employee by ID:" + employeeId);
+        LOGGER.info("Find employee by ID: {}", employeeId);
         try {
             final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
             final Employee employee = template.queryForObject(FIND_BY_ID_SQL, namedParameters, employeeMapper);
@@ -76,7 +76,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public Long createEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Create a new employee: " + employee.toString());
+        LOGGER.info("Create a new employee: {}", employee);
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(CREATE_EMPLOYEE_SQL, mapSqlParameterSource(employee), keyHolder, new String[]{EMPLOYEE_ID});
@@ -84,30 +84,28 @@ public class EmployeeDaoImp implements EmployeeDao {
         } catch (final DataAccessException ex) {
             throw new EmployeeDaoException("Some issues with SQL", ex);
         } catch (final NullPointerException ex) {
-            final String errorMassage = "Employee not created";
-            throw new EmployeeDaoException(errorMassage, ex);
+            throw new EmployeeDaoException("Employee not created", ex);
         }
     }
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Update the employee: " + employee.toString());
+        LOGGER.info("Update the employee: {}", employee.toString());
         try {
             template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
         } catch (final RuntimeException ex) {
-            final String errorMassage = "Check the employee passed to the method";
-            throw new EmployeeDaoException(errorMassage, ex);
+            throw new EmployeeDaoException("Check the employee passed to the method", ex);
         }
     }
 
     @Override
     public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
-        LOGGER.info("Delete the employee with ID: " + employeeId);
+        LOGGER.info("Delete the employee with ID: {}", employeeId);
         try {
             final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
             return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);
         } catch (final RuntimeException ex) {
-            final String errorMassage = "Employee not found with ID: " + employeeId;
+            final String errorMassage = String.format("Employee not found with ID: %s", employeeId);
             throw new EmployeeDaoException(errorMassage, ex);
         }
     }

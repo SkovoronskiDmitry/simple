@@ -3,7 +3,8 @@ package com.mastery.java.task.simple.rest;
 import com.mastery.java.task.simple.dto.ErrorDto;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.datatime.DateTimeService;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomGlobalExceptionHandler {
 
-    private final static Logger LOGGER = Logger.getLogger(CustomGlobalExceptionHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CustomGlobalExceptionHandler.class);
 
     private final DateTimeService dateTimeService;
 
