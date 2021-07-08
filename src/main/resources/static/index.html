@@ -67,13 +67,13 @@
                 document.getElementById("employeeList").innerHTML = html;
             }
         };
-        xhttp.open("GET", "http://localhost:8080/webapp/employees/" + employeeId, true);
+        xhttp.open("GET", "http://localhost:8080/employees/" + employeeId, true);
         xhttp.send();
     }
 
     function deleteEmployee(employeeId) {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("DELETE", "http://localhost:8080/webapp/employees/" + employeeId, true);
+        xhttp.open("DELETE", "http://localhost:8080/employees/" + employeeId, true);
         xhttp.send();
     }
 
@@ -86,7 +86,7 @@
         var employeeDateOfBirth = document.getElementById("date_of_birth").value;
 
         var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-        xmlhttp.open("POST", "http://localhost:8080/webapp/employees");
+        xmlhttp.open("POST", "http://localhost:8080/employees");
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(JSON.stringify({firstName: employeeFirstName, lastName: employeeLastName, departmentId: employeeDepartmentId, jobTitle:employeeJobTitle, gender:employeeGender, dateOfBirth:employeeDateOfBirth}));
         loadEmployees();
@@ -123,7 +123,7 @@
                 document.getElementById("employeeList").innerHTML = html;
             }
         };
-        xhttp.open("GET", "http://localhost:8080/webapp/employees", true);
+        xhttp.open("GET", "http://localhost:8080/employees", true);
         xhttp.send();
     }
 
