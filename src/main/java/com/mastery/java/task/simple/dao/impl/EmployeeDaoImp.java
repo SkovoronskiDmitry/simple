@@ -16,14 +16,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public class EmployeeDaoImp implements EmployeeDao {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImp.class);
@@ -90,9 +88,10 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Update the employee: {}", employee.toString());
+        LOGGER.info("Update the employee: {}", employee);
         try {
             template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
+
         } catch (final RuntimeException ex) {
             throw new EmployeeDaoException("Check the employee passed to the method", ex);
         }

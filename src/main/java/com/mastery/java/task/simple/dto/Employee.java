@@ -3,6 +3,7 @@ package com.mastery.java.task.simple.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -10,15 +11,20 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @ApiModel(value = "Employee Model", subTypes = {Employee.class}, description = "Sample model for the documentation")
+@Entity
 public class Employee {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
     @NotEmpty(message = "Please provide a firstName")
     private String firstName;
     @NotEmpty(message = "Please provide a LastName")
     private String lastName;
     @NotNull(message = "Please provide a gender")
-    private Gender gender;
+//    private Gender gender;
+    private String gender;
+
     @NotNull(message = "Please provide a departmentId")
     private Long departmentId;
     @NotEmpty(message = "Please provide a jobTitle")
@@ -39,7 +45,9 @@ public class Employee {
     ) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = Gender.valueOf(gender.toUpperCase());
+//        this.gender = Gender.valueOf(gender.toUpperCase());
+        this.gender=gender;
+
         this.departmentId = departmentId;
         this.jobTitle = jobTitle;
         this.dateOfBirth = dateOfBirth;
@@ -77,8 +85,11 @@ public class Employee {
         return gender.toString();
     }
 
+//    public void setGender(final String gender) {
+//        this.gender = Gender.valueOf(gender.toUpperCase());
+//    }
     public void setGender(final String gender) {
-        this.gender = Gender.valueOf(gender.toUpperCase());
+        this.gender = gender;
     }
 
     @ApiModelProperty(value = "Employee's department number", example = "9", required = true, position = 6)

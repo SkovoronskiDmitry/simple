@@ -12,9 +12,9 @@ public interface EmployeeService {
 
     Optional<Employee> findById(Integer id) throws EmployeeDaoException;
 
-    Long createEmployee(Employee employee) throws EmployeeDaoException;
+    Employee createEmployee(Employee employee) throws EmployeeDaoException;
 
     void updateEmployee(Employee employee) throws EmployeeDaoException;
 
-    int deleteEmployee(Integer employeeId) throws EmployeeDaoException;
+    void deleteEmployee(Integer employeeId) throws EmployeeDaoException;
 }

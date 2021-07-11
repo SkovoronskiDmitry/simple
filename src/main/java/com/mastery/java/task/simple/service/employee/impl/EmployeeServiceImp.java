@@ -1,6 +1,7 @@
 package com.mastery.java.task.simple.service.employee.impl;
 
 import com.mastery.java.task.simple.dao.EmployeeDao;
+import com.mastery.java.task.simple.dao.EmployeeRepository;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
@@ -15,36 +16,44 @@ public class EmployeeServiceImp implements EmployeeService {
 
     private final EmployeeDao employeeDao;
 
+    private final EmployeeRepository employeeRepository;
+
     @Autowired
-    public EmployeeServiceImp(final EmployeeDao employeeDao) {
+    public EmployeeServiceImp(final EmployeeDao employeeDao, EmployeeRepository employeeRepository) {
         this.employeeDao = employeeDao;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
     public List<Employee> findAll() throws EmployeeDaoException {
-        return employeeDao.findAll();
+        return employeeRepository.findAll();
     }
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
-        return employeeDao.findById(employeeId);
+        return employeeRepository.findById(Long.valueOf(employeeId));
     }
 
     @Override
-    public Long createEmployee(final Employee employee) throws EmployeeDaoException {
+    public Employee createEmployee(final Employee employee) throws EmployeeDaoException {
         if (employee.getEmployeeId() != null) {
             throw new IllegalArgumentException("Employee ID is null");
         }
-        return employeeDao.createEmployee(employee);
+        return employeeRepository.save(employee);
     }
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        employeeDao.updateEmployee(employee);
+        employeeRepository.findById(employee.getEmployeeId())
+                .map(newEmployee -> {
+                    newEmployee.setJobTitle(employee.getJobTitle());
+                    newEmployee.setDepartmentId(employee.getDepartmentId());
+                    return employeeRepository.save(newEmployee);
+                });
     }
 
     @Override
-    public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
-        return employeeDao.deleteEmployee(employeeId);
+    public void deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
+        employeeRepository.deleteById(Long.valueOf(employeeId));
     }
 }

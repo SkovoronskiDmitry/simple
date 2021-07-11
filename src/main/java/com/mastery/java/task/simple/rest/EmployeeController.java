@@ -1,10 +1,14 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
+import com.mastery.java.task.simple.dao.impl.EmployeeDaoImp;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
 import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,8 @@ import java.util.Collection;
 @RestController
 @RequestMapping(value = "/employees")
 public class EmployeeController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
     private final EmployeeService employeeService;
 
@@ -42,6 +48,7 @@ public class EmployeeController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Employee> findAll() throws EmployeeDaoException {
+        LOGGER.info("");
         return employeeService.findAll();
     }
 
@@ -81,8 +88,8 @@ public class EmployeeController {
             @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
             @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public Long createEmployee(
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Employee createEmployee(
             @ApiParam(value = "New employee", required = true)
             @Valid @RequestBody final Employee employee) throws EmployeeDaoException {
         return employeeService.createEmployee(employee);
@@ -122,10 +129,10 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
             @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
     })
-    @DeleteMapping(value = "/{employeeId}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public int deleteEmployee(
+    @DeleteMapping(value = "/{employeeId}")
+    public void deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
             @PathVariable final Integer employeeId) throws EmployeeDaoException {
-        return employeeService.deleteEmployee(employeeId);
+        employeeService.deleteEmployee(employeeId);
     }
 }

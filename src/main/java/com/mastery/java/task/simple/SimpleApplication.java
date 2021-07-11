@@ -15,8 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         TaskSchedulingAutoConfiguration.class,
         SecurityAutoConfiguration.class
 })
-@EnableSwagger2
-@EnableJms
+//@EnableSwagger2
+//@EnableJms
 public class SimpleApplication {
 
     @Bean
