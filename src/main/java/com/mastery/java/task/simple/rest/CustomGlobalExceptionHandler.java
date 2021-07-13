@@ -1,10 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.ErrorDto;
-import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.datatime.DateTimeService;
-import org.slf4j.LoggerFactory;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
@@ -12,17 +12,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class CustomGlobalExceptionHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CustomGlobalExceptionHandler.class);
@@ -34,17 +33,15 @@ public class CustomGlobalExceptionHandler {
         this.dateTimeService = dateTimeService;
     }
 
-    @ExceptionHandler(value = {EmployeeNotFoundException.class})
-    @ResponseBody
+    @ExceptionHandler(value = {EmployeeServiceNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDto handleEmployeeNotFoundException(final EmployeeNotFoundException ex) {
+    public ErrorDto handleEmployeeNotFoundException(final EmployeeServiceNotFoundException ex) {
         LOGGER.error("Not found", ex);
         return createErrorDto(HttpStatus.NOT_FOUND, "Employee not found."
         );
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleBedRequest(final IllegalArgumentException ex) {
         LOGGER.error("Bad Request", ex);
@@ -53,7 +50,6 @@ public class CustomGlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {DataAccessException.class})
-    @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleDataAccessException(final DataAccessException ex) {
         LOGGER.error("Internal Server Error", ex);
@@ -62,7 +58,6 @@ public class CustomGlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {Throwable.class})
-    @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto uncaughtException(final Throwable ex) {
         LOGGER.error("Unhandled exception caught!", ex);

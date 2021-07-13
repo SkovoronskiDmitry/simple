@@ -4,6 +4,7 @@ import com.mastery.java.task.simple.dao.EmployeeRepository;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,27 +23,27 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findAll() throws EmployeeDaoException {
+    public List<Employee> findAll() throws EmployeeServiceException {
         return employeeRepository.findAll();
     }
 
     @Override
-    public Optional<Employee> findById(final Long employeeId) throws EmployeeDaoException {
+    public Optional<Employee> findById(final Long employeeId) throws EmployeeServiceException {
         return employeeRepository.findById(employeeId);
     }
 
     @Override
-    public List<Employee> findByFirstNameAndLastName(final String firstName, final String lastName) throws EmployeeDaoException {
+    public List<Employee> findByFirstNameAndLastName(final String firstName, final String lastName) throws EmployeeServiceException {
         return employeeRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override
-    public Employee createEmployee(final Employee employee) throws EmployeeDaoException {
+    public Employee createEmployee(final Employee employee) throws EmployeeServiceException {
         return employeeRepository.save(employee);
     }
 
     @Override
-    public void updateEmployee(final Employee employee) throws EmployeeDaoException {
+    public void updateEmployee(final Employee employee) throws EmployeeServiceException {
         employeeRepository.findById(employee.getEmployeeId())
                 .map(newEmployee -> {
                     newEmployee.setJobTitle(employee.getJobTitle());
@@ -52,7 +53,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployee(final Long employeeId) throws EmployeeDaoException {
+    public void deleteEmployee(final Long employeeId) throws EmployeeServiceException {
         employeeRepository.deleteById(employeeId);
     }
 }

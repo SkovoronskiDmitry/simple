@@ -1,13 +1,13 @@
 package com.mastery.java.task.simple.service;
 
 import com.mastery.java.task.simple.SimpleApplication;
-import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,13 +23,13 @@ class EmployeeServiceImpTest {
 
     private final static Employee EMPLOYEE = new Employee("Alex", "Poll",
             "male", 8L,
-            "assistance", LocalDate.now());
+            "assistance", LocalDate.of(1987, 04, 13));
 
     @Autowired
     private EmployeeService employeeService;
 
     @Test
-    void shouldFindAllEmployee() throws EmployeeDaoException {
+    void shouldFindAllEmployee() throws EmployeeServiceException {
         LOGGER.info("TEST method: Find all Employees");
         List<Employee> employeeList = employeeService.findAll();
 
@@ -38,22 +38,22 @@ class EmployeeServiceImpTest {
     }
 
     @Test
-    void ShouldCreateEmployee() throws EmployeeDaoException {
-        Long newEmployeeId = employeeService.createEmployee(EMPLOYEE);
-        LOGGER.info("TEST method: Employee created with ID: {}", newEmployeeId);
-        Assertions.assertNotNull(newEmployeeId);
+    void ShouldCreateEmployee() throws EmployeeServiceException {
+        Employee employeeResultTest = employeeService.createEmployee(EMPLOYEE);
+        LOGGER.info("TEST create method: Employee created: {}", employeeResultTest);
+        Assertions.assertNotNull(employeeResultTest);
     }
 
     @Test
-    void shouldFindEmployeeById() throws EmployeeDaoException {
-        Long newEmployeeId = employeeService.createEmployee(EMPLOYEE);
+    void shouldFindEmployeeById() throws EmployeeServiceException {
+        Employee employeeResultTest = employeeService.createEmployee(EMPLOYEE);
 
-        Optional<Employee> optionalEmployee = employeeService.findById(Math.toIntExact(newEmployeeId));
+        Optional<Employee> optionalEmployee = employeeService.findById(employeeResultTest.getEmployeeId());
 
-        LOGGER.info("TEST method: Find Employee by ID: {} {}", newEmployeeId, optionalEmployee.get());
+        LOGGER.info("TEST method: Find Employee by ID: {} {}", employeeResultTest.getEmployeeId(), optionalEmployee.get());
 
         Assertions.assertTrue(optionalEmployee.isPresent());
-        Assertions.assertEquals(optionalEmployee.get().getEmployeeId(), newEmployeeId);
+        Assertions.assertEquals(optionalEmployee.get().getEmployeeId(), EMPLOYEE.getEmployeeId());
         Assertions.assertEquals(optionalEmployee.get().getFirstName(), EMPLOYEE.getFirstName());
         Assertions.assertEquals(optionalEmployee.get().getLastName(), EMPLOYEE.getLastName());
         Assertions.assertEquals(optionalEmployee.get().getJobTitle(), EMPLOYEE.getJobTitle());
@@ -63,9 +63,9 @@ class EmployeeServiceImpTest {
     }
 
     @Test
-    void updateEmployee() throws EmployeeDaoException {
-        Long employeeId = employeeService.createEmployee(EMPLOYEE);
-        Assertions.assertNotNull(employeeId);
+    void updateEmployee() throws EmployeeServiceException {
+        Employee employeeResultTest = employeeService.createEmployee(EMPLOYEE);
+        Assertions.assertNotNull(employeeResultTest);
 
         Employee employeeForUpdate = EMPLOYEE;
 
@@ -83,15 +83,15 @@ class EmployeeServiceImpTest {
     }
 
     @Test
-    void deleteEmployee() throws EmployeeDaoException {
+    void deleteEmployee() throws EmployeeServiceException {
         List<Employee> employeeList = employeeService.findAll();
         Assertions.assertNotNull(employeeList);
 
-        employeeService.deleteEmployee(1);
+        employeeService.deleteEmployee(1L);
 
         List<Employee> employeesFlightAfterDelete = employeeService.findAll();
         Assertions.assertNotNull(employeesFlightAfterDelete);
-        LOGGER.info("TEST method: Delete Employee: {}" , (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
+        LOGGER.info("TEST method: Delete Employee: {}", (employeeList.size() - 1 == employeesFlightAfterDelete.size()));
         Assertions.assertEquals(employeesFlightAfterDelete.size(), employeeList.size() - 1);
     }
 }

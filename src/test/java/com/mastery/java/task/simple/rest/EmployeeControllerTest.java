@@ -3,6 +3,7 @@ package com.mastery.java.task.simple.rest;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -53,7 +54,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void findAll() throws EmployeeDaoException {
+    void findAll() throws EmployeeServiceException {
         // given
         final List<Employee> employeeList = new LinkedList<>();
         employeeList.add(employeeForTest);
@@ -69,15 +70,15 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void findById() throws EmployeeDaoException {
+    void findById() throws EmployeeServiceException {
         // given
-        Mockito.when(employeeService.findById(any(Integer.class))).thenReturn(Optional.ofNullable(employeeForTest));
+        Mockito.when(employeeService.findById(any(Long.class))).thenReturn(Optional.ofNullable(employeeForTest));
 
         // when
-        final Optional<Employee> optionalEmployee = employeeService.findById(any(Integer.class));
+        final Optional<Employee> optionalEmployee = employeeService.findById(any(Long.class));
 
         // then
-        Mockito.verify(employeeService, Mockito.times(1)).findById(0);
+        Mockito.verify(employeeService, Mockito.times(1)).findById(0L);
         Assertions.assertTrue(optionalEmployee.isPresent());
         assertThat(optionalEmployee, CoreMatchers.notNullValue());
         assertThat(employeeForTest.getFirstName(), CoreMatchers.is(optionalEmployee.get().getFirstName()));
@@ -89,20 +90,20 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void createEmployee() throws EmployeeDaoException {
+    void createEmployee() throws EmployeeServiceException {
         // given
-        when(employeeService.createEmployee(employeeForTest)).thenReturn(any(Long.class));
+        when(employeeService.createEmployee(employeeForTest)).thenReturn(employeeForTest);
 
         // when
-        final Long employeeId = employeeService.createEmployee(employeeForTest);
+        final Employee employeeResult = employeeService.createEmployee(employeeForTest);
 
         // then
         Mockito.verify(employeeService, Mockito.times(1)).createEmployee(employeeForTest);
-        assertThat(employeeId, CoreMatchers.notNullValue());
+        assertThat(employeeResult, CoreMatchers.notNullValue());
     }
 
     @Test
-    void updateEmployee() throws EmployeeDaoException {
+    void updateEmployee() throws EmployeeServiceException {
         // given
         final Employee employeeForUpdate = new Employee("Alex",
                 "Poll",
@@ -129,80 +130,79 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void deleteEmployee() throws EmployeeDaoException {
+    void deleteEmployee() throws EmployeeServiceException {
         // given
-        when(employeeService.deleteEmployee(any(Integer.class))).thenReturn(1);
+        doNothing().when(employeeService).deleteEmployee(any(Long.class));
 
         // when
-        final int resultOfDelete = employeeService.deleteEmployee(1);
+        employeeService.deleteEmployee(1L);
 
         // then
-        Mockito.verify(employeeService, Mockito.times(1)).deleteEmployee(any(Integer.class));
-        assertThat(resultOfDelete, CoreMatchers.equalTo(1));
+        Mockito.verify(employeeService, Mockito.times(1)).deleteEmployee(any(Long.class));
     }
 
     @Test
-    public void testExceptionFindAll() throws EmployeeDaoException {
+    public void testExceptionFindAll() throws EmployeeServiceException {
         // given
-        Mockito.doThrow(EmployeeDaoException.class).when(employeeService).findAll();
+        Mockito.doThrow(EmployeeServiceException.class).when(employeeService).findAll();
 
         // when
         final Throwable throwable = catchThrowable(() -> employeeService.findAll());
 
         // then
         verify(employeeService).findAll();
-        assertThat(throwable, Matchers.instanceOf(EmployeeDaoException.class));
+        assertThat(throwable, Matchers.instanceOf(EmployeeServiceException.class));
     }
 
     @Test
-    public void testExceptionFindById() throws EmployeeDaoException {
+    public void testExceptionFindById() throws EmployeeServiceException {
         // given
-        Mockito.doThrow(EmployeeDaoException.class).when(employeeService).findById(any(Integer.class));
+        Mockito.doThrow(EmployeeServiceException.class).when(employeeService).findById(any(Long.class));
 
         // when
-        final Throwable throwable = catchThrowable(() -> employeeService.findById(any(Integer.class)));
+        final Throwable throwable = catchThrowable(() -> employeeService.findById(any(Long.class)));
 
         // then
-        verify(employeeService).findById(any(Integer.class));
-        assertThat(throwable, Matchers.instanceOf(EmployeeDaoException.class));
+        verify(employeeService).findById(any(Long.class));
+        assertThat(throwable, Matchers.instanceOf(EmployeeServiceException.class));
     }
 
     @Test
-    public void testExceptionCreateEmployee() throws EmployeeDaoException {
+    public void testExceptionCreateEmployee() throws EmployeeServiceException {
         // given
-        Mockito.doThrow(EmployeeDaoException.class).when(employeeService).createEmployee(employeeForTest);
+        Mockito.doThrow(EmployeeServiceException.class).when(employeeService).createEmployee(employeeForTest);
 
         // when
         final Throwable throwable = catchThrowable(() -> employeeService.createEmployee(employeeForTest));
 
         // then
         verify(employeeService).createEmployee(employeeForTest);
-        assertThat(throwable, Matchers.instanceOf(EmployeeDaoException.class));
+        assertThat(throwable, Matchers.instanceOf(EmployeeServiceException.class));
     }
 
     @Test
-    public void testExceptionUpdateEmployee() throws EmployeeDaoException {
+    public void testExceptionUpdateEmployee() throws EmployeeServiceException {
         // given
-        Mockito.doThrow(EmployeeDaoException.class).when(employeeService).updateEmployee(employeeForTest);
+        Mockito.doThrow(EmployeeServiceException.class).when(employeeService).updateEmployee(employeeForTest);
 
         // when
         final Throwable throwable = catchThrowable(() -> employeeService.updateEmployee(employeeForTest));
 
         // then
         verify(employeeService).updateEmployee(employeeForTest);
-        assertThat(throwable, Matchers.instanceOf(EmployeeDaoException.class));
+        assertThat(throwable, Matchers.instanceOf(EmployeeServiceException.class));
     }
 
     @Test
-    public void testExceptionDeleteEmployee() throws EmployeeDaoException {
+    public void testExceptionDeleteEmployee() throws EmployeeServiceException {
         // given
-        Mockito.doThrow(EmployeeDaoException.class).when(employeeService).deleteEmployee(1);
+        Mockito.doThrow(EmployeeServiceException.class).when(employeeService).deleteEmployee(1L);
 
         // when
-        final Throwable throwable = catchThrowable(() -> employeeService.deleteEmployee(1));
+        final Throwable throwable = catchThrowable(() -> employeeService.deleteEmployee(1L));
 
         // then
-        verify(employeeService).deleteEmployee(1);
-        assertThat(throwable, Matchers.instanceOf(EmployeeDaoException.class));
+        verify(employeeService).deleteEmployee(1L);
+        assertThat(throwable, Matchers.instanceOf(EmployeeServiceException.class));
     }
 }

@@ -1,9 +1,9 @@
 package com.mastery.java.task.simple.rest;
 
-import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
-import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +45,8 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<Employee> findAll() throws EmployeeDaoException {
-        LOGGER.info("");
+    public Collection<Employee> findAll() throws EmployeeServiceException {
+        LOGGER.info("IN", "find all employees");
         return employeeService.findAll();
     }
 
@@ -67,9 +67,9 @@ public class EmployeeController {
     @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
-            @PathVariable final Long employeeId) throws EmployeeNotFoundException, EmployeeDaoException {
+            @PathVariable final Long employeeId) throws EmployeeServiceNotFoundException, EmployeeServiceException {
         return employeeService.findById(employeeId).
-                orElseThrow(() -> new EmployeeNotFoundException(employeeId.toString()));
+                orElseThrow(() -> new EmployeeServiceNotFoundException(employeeId.toString()));
     }
 
     @ApiOperation(
@@ -91,7 +91,7 @@ public class EmployeeController {
             @ApiParam(value = "firstName for search employee", required = true)
             @PathVariable final String firstName,
             @ApiParam(value = "lastName for search employee", required = true)
-            @PathVariable final String lastName) throws EmployeeDaoException, EmployeeNotFoundException {
+            @PathVariable final String lastName) throws EmployeeServiceException {
         return employeeService.findByFirstNameAndLastName(firstName, lastName);
     }
 
@@ -112,7 +112,7 @@ public class EmployeeController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Employee createEmployee(
             @ApiParam(value = "New employee", required = true)
-            @Valid @RequestBody final Employee employee) throws EmployeeDaoException {
+            @Valid @RequestBody final Employee employee) throws EmployeeServiceException {
         return employeeService.createEmployee(employee);
     }
 
@@ -134,7 +134,7 @@ public class EmployeeController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
-            @RequestBody final Employee employee) throws EmployeeDaoException {
+            @RequestBody final Employee employee) throws EmployeeServiceException {
         employeeService.updateEmployee(employee);
     }
 
@@ -153,7 +153,7 @@ public class EmployeeController {
     @DeleteMapping(value = "/{employeeId}")
     public void deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
-            @PathVariable final Long employeeId) throws EmployeeDaoException {
+            @PathVariable final Long employeeId) throws EmployeeServiceException {
         employeeService.deleteEmployee(employeeId);
     }
 }

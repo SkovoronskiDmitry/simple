@@ -1,8 +1,8 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.ErrorDto;
-import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.datatime.DateTimeService;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.jupiter.api.Assertions;
@@ -47,12 +47,12 @@ class CustomGlobalExceptionHandlerTest {
     @Test
     void handleEmployeeNotFoundException() {
         //given
-        final EmployeeNotFoundException employeeNotFoundException = new EmployeeNotFoundException(1);
+        final EmployeeServiceNotFoundException employeeServiceNotFoundException = new EmployeeServiceNotFoundException("1");
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);
 
         //when
         final ErrorDto errorDto =
-                customGlobalExceptionHandler.handleEmployeeNotFoundException(employeeNotFoundException);
+                customGlobalExceptionHandler.handleEmployeeNotFoundException(employeeServiceNotFoundException);
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
         Assertions.assertNotNull(errorDto);
