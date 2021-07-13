@@ -3,7 +3,10 @@ package com.mastery.java.task.simple.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -24,7 +27,6 @@ public class Employee {
     @NotNull(message = "Please provide a gender")
 //    private Gender gender;
     private String gender;
-
     @NotNull(message = "Please provide a departmentId")
     private Long departmentId;
     @NotEmpty(message = "Please provide a jobTitle")
@@ -46,8 +48,7 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
 //        this.gender = Gender.valueOf(gender.toUpperCase());
-        this.gender=gender;
-
+        this.gender = gender;
         this.departmentId = departmentId;
         this.jobTitle = jobTitle;
         this.dateOfBirth = dateOfBirth;
@@ -85,7 +86,7 @@ public class Employee {
         return gender.toString();
     }
 
-//    public void setGender(final String gender) {
+    //    public void setGender(final String gender) {
 //        this.gender = Gender.valueOf(gender.toUpperCase());
 //    }
     public void setGender(final String gender) {

@@ -1,6 +1,5 @@
 package com.mastery.java.task.simple.service.employee.impl;
 
-import com.mastery.java.task.simple.dao.EmployeeDao;
 import com.mastery.java.task.simple.dao.EmployeeRepository;
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
 import com.mastery.java.task.simple.dto.Employee;
@@ -14,13 +13,11 @@ import java.util.Optional;
 @Service
 public class EmployeeServiceImp implements EmployeeService {
 
-    private final EmployeeDao employeeDao;
 
     private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImp(final EmployeeDao employeeDao, EmployeeRepository employeeRepository) {
-        this.employeeDao = employeeDao;
+    public EmployeeServiceImp(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -30,15 +27,17 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
-        return employeeRepository.findById(Long.valueOf(employeeId));
+    public Optional<Employee> findById(final Long employeeId) throws EmployeeDaoException {
+        return employeeRepository.findById(employeeId);
+    }
+
+    @Override
+    public List<Employee> findByFirstNameAndLastName(final String firstName, final String lastName) throws EmployeeDaoException {
+        return employeeRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override
     public Employee createEmployee(final Employee employee) throws EmployeeDaoException {
-        if (employee.getEmployeeId() != null) {
-            throw new IllegalArgumentException("Employee ID is null");
-        }
         return employeeRepository.save(employee);
     }
 
@@ -53,7 +52,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
-        employeeRepository.deleteById(Long.valueOf(employeeId));
+    public void deleteEmployee(final Long employeeId) throws EmployeeDaoException {
+        employeeRepository.deleteById(employeeId);
     }
 }

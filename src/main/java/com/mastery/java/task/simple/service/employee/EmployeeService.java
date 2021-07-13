@@ -10,11 +10,13 @@ public interface EmployeeService {
 
     List<Employee> findAll() throws EmployeeDaoException;
 
-    Optional<Employee> findById(Integer id) throws EmployeeDaoException;
+    Optional<Employee> findById(Long id) throws EmployeeDaoException;
+
+    List<Employee> findByFirstNameAndLastName (String firstName, String lastName) throws EmployeeDaoException;
 
     Employee createEmployee(Employee employee) throws EmployeeDaoException;
 
     void updateEmployee(Employee employee) throws EmployeeDaoException;
 
-    void deleteEmployee(Integer employeeId) throws EmployeeDaoException;
+    void deleteEmployee(Long employeeId) throws EmployeeDaoException;
 }

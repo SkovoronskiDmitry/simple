@@ -1,12 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dao.exception.EmployeeDaoException;
-import com.mastery.java.task.simple.dao.impl.EmployeeDaoImp;
 import com.mastery.java.task.simple.dto.Employee;
 import com.mastery.java.task.simple.rest.exception.EmployeeNotFoundException;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
 import io.swagger.annotations.*;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +67,32 @@ public class EmployeeController {
     @GetMapping(value = "/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
-            @PathVariable final Integer employeeId) throws EmployeeNotFoundException, EmployeeDaoException {
+            @PathVariable final Long employeeId) throws EmployeeNotFoundException, EmployeeDaoException {
         return employeeService.findById(employeeId).
-                orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+                orElseThrow(() -> new EmployeeNotFoundException(employeeId.toString()));
+    }
+
+    @ApiOperation(
+            value = "Find employee by firstName and lastName",
+            response = Employee.class,
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "find:employee", description = "find employee by firstName and lastName")}
+                    )})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 400, message = "Bad Request — The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid"),
+            @ApiResponse(code = 404, message = "Not found — There is no resource behind the URI"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
+    })
+    @GetMapping(value = "/{firstName}/{lastName}")
+    public Collection<Employee> findByFirstNameAndLastName(
+            @ApiParam(value = "firstName for search employee", required = true)
+            @PathVariable final String firstName,
+            @ApiParam(value = "lastName for search employee", required = true)
+            @PathVariable final String lastName) throws EmployeeDaoException, EmployeeNotFoundException {
+        return employeeService.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @ApiOperation(
@@ -132,7 +153,7 @@ public class EmployeeController {
     @DeleteMapping(value = "/{employeeId}")
     public void deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
-            @PathVariable final Integer employeeId) throws EmployeeDaoException {
+            @PathVariable final Long employeeId) throws EmployeeDaoException {
         employeeService.deleteEmployee(employeeId);
     }
 }
