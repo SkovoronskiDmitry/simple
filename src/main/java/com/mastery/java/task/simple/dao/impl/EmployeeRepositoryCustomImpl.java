@@ -19,7 +19,8 @@ public class EmployeeRepositoryCustomImpl implements EmployeeRepositoryCustom {
     @Override
     public List<Employee> findByFirstNameAndLastName(String firstName, String lastName) throws EmployeeServiceException {
         Query query = entityManager.createNativeQuery(
-                "SELECT * FROM Employee WHERE FirstName = :firstName AND LastName = :lastName;");
+                "SELECT * FROM Employee WHERE first_name = '"+firstName+"' AND last_name = '"+lastName+"'");
+        System.out.println(query.getResultList());
         return query.getResultList();
     }
 }

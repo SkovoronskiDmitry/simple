@@ -45,7 +45,7 @@ class CustomGlobalExceptionHandlerTest {
     }
 
     @Test
-    void handleEmployeeNotFoundException() {
+    void handleEmployeeServiceNotFoundException() {
         //given
         final EmployeeServiceNotFoundException employeeServiceNotFoundException = new EmployeeServiceNotFoundException("1");
         when(dateTimeService.getCurrentDate()).thenReturn(DATE);

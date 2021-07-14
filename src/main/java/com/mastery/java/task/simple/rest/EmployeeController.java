@@ -46,7 +46,7 @@ public class EmployeeController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Employee> findAll() throws EmployeeServiceException {
-        LOGGER.info("IN", "find all employees");
+        LOGGER.info("IN: Find all employees");
         return employeeService.findAll();
     }
 
@@ -68,6 +68,7 @@ public class EmployeeController {
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
             @PathVariable final Long employeeId) throws EmployeeServiceNotFoundException, EmployeeServiceException {
+        LOGGER.info("IN: Find Employee with ID: {}", employeeId);
         return employeeService.findById(employeeId).
                 orElseThrow(() -> new EmployeeServiceNotFoundException(employeeId.toString()));
     }
@@ -92,6 +93,7 @@ public class EmployeeController {
             @PathVariable final String firstName,
             @ApiParam(value = "lastName for search employee", required = true)
             @PathVariable final String lastName) throws EmployeeServiceException {
+        LOGGER.error("IN: Find Employee with firstName: {}, lastName: {}", firstName, lastName);
         return employeeService.findByFirstNameAndLastName(firstName, lastName);
     }
 
@@ -113,6 +115,7 @@ public class EmployeeController {
     public Employee createEmployee(
             @ApiParam(value = "New employee", required = true)
             @Valid @RequestBody final Employee employee) throws EmployeeServiceException {
+        LOGGER.info("IN: Create Employee: {}", employee);
         return employeeService.createEmployee(employee);
     }
 
@@ -135,7 +138,9 @@ public class EmployeeController {
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
             @RequestBody final Employee employee) throws EmployeeServiceException {
+        LOGGER.info("IN: Update Employee: {}", employee);
         employeeService.updateEmployee(employee);
+        LOGGER.info("OUT: Employee was successfully update: {}", employee);
     }
 
     @ApiOperation(value = "Delete Employee by ID",
@@ -154,6 +159,8 @@ public class EmployeeController {
     public void deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
             @PathVariable final Long employeeId) throws EmployeeServiceException {
+        LOGGER.info("IN: Delete Employee with ID {}", employeeId);
         employeeService.deleteEmployee(employeeId);
+        LOGGER.info("OUT: Employee was successfully delete with ID {}", employeeId);
     }
 }
