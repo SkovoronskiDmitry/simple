@@ -1,5 +1,6 @@
 package com.mastery.java.task.simple.dto;
 
+import com.mastery.java.task.simple.dto.annatation.EighteenYearsOld;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -32,9 +33,28 @@ public class Employee {
     @NotEmpty(message = "Please provide a jobTitle")
     private String jobTitle;
     @Past(message = "Only past time")
+    @EighteenYearsOld
     private LocalDate dateOfBirth;
 
     public Employee() {
+    }
+
+    public Employee(
+            final Long employeeId,
+            final String firstName,
+            final String lastName,
+            final String gender,
+            final Long departmentId,
+            final String jobTitle,
+            final LocalDate dateOfBirth
+    ) {
+        this.employeeId = employeeId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.departmentId = departmentId;
+        this.jobTitle = jobTitle;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Employee(
