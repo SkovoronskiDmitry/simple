@@ -3,6 +3,8 @@ package com.mastery.java.task.simple.dto;
 import com.mastery.java.task.simple.dto.annatation.EighteenYearsOld;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,8 @@ import java.util.Objects;
 
 @ApiModel(value = "Employee Model", subTypes = {Employee.class}, description = "Sample model for the documentation")
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
 
     @Id
@@ -35,27 +39,6 @@ public class Employee {
     @Past(message = "Only past time")
     @EighteenYearsOld
     private LocalDate dateOfBirth;
-
-    public Employee() {
-    }
-
-    public Employee(
-            final Long employeeId,
-            final String firstName,
-            final String lastName,
-            final String gender,
-            final Long departmentId,
-            final String jobTitle,
-            final LocalDate dateOfBirth
-    ) {
-        this.employeeId = employeeId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.departmentId = departmentId;
-        this.jobTitle = jobTitle;
-        this.dateOfBirth = dateOfBirth;
-    }
 
     public Employee(
             final String firstName,

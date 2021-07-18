@@ -1,23 +1,22 @@
 package com.mastery.java.task.simple;
 
+import com.mastery.java.task.simple.service.converter.CustomConverterFromIntegerToEmployee;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.annotation.EnableJms;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(exclude = {
         TaskSchedulingAutoConfiguration.class,
         SecurityAutoConfiguration.class
 })
-//@EnableSwagger2
-//@EnableJms
-public class SimpleApplication {
+public class SimpleApplication implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
@@ -26,6 +25,11 @@ public class SimpleApplication {
                 .apis(RequestHandlerSelectors.basePackage("com.mastery.java.task.simple.rest"))
                 .build()
                 .useDefaultResponseMessages(false);
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new CustomConverterFromIntegerToEmployee());
     }
 
     public static void main(final String[] args) {
