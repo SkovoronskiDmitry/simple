@@ -30,7 +30,6 @@ public class Employee {
     @NotEmpty(message = "Please provide a LastName")
     private String lastName;
     @NotNull(message = "Please provide a gender")
-//    private Gender gender;
     private String gender;
     @NotNull(message = "Please provide a departmentId")
     private Long departmentId;
@@ -89,9 +88,6 @@ public class Employee {
         return gender.toString();
     }
 
-    //    public void setGender(final String gender) {
-//        this.gender = Gender.valueOf(gender.toUpperCase());
-//    }
     public void setGender(final String gender) {
         this.gender = gender;
     }
