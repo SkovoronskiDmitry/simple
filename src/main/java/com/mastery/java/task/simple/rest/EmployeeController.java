@@ -1,6 +1,7 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.Employee;
+import com.mastery.java.task.simple.jms.JmsProducer;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
@@ -23,9 +24,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    private final JmsProducer jmsProducer;
+
     @Autowired
-    public EmployeeController(final EmployeeService employeeService) {
+    public EmployeeController(final EmployeeService employeeService, JmsProducer jmsProducer) {
         this.employeeService = employeeService;
+        this.jmsProducer = jmsProducer;
     }
 
     @ApiOperation(
@@ -162,5 +166,21 @@ public class EmployeeController {
         LOGGER.info("IN: Delete Employee with ID {}", employeeId);
         employeeService.deleteEmployee(employeeId);
         LOGGER.info("OUT: Employee was successfully delete with ID {}", employeeId);
+    }
+
+    @ApiOperation(value = "Send message with employee",
+            authorizations = {
+                    @Authorization(
+                            value = "Employee",
+                            scopes = {@AuthorizationScope(scope = "send:massage", description = "send employee as a message")}
+                    )})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Everything is working"),
+            @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
+    })
+    @PostMapping(value = "/jms", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Employee sendMessage(@RequestBody Employee employee) {
+        jmsProducer.sendMessage(employee);
+        return employee;
     }
 }
