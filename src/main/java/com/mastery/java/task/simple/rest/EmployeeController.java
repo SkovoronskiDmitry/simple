@@ -1,10 +1,10 @@
 package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.Employee;
-import com.mastery.java.task.simple.jms.JmsProducer;
 import com.mastery.java.task.simple.service.employee.EmployeeService;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
+import com.mastery.java.task.simple.service.jms.JmsService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    private final JmsProducer jmsProducer;
+    private final JmsService jmsService;
 
     @Autowired
-    public EmployeeController(final EmployeeService employeeService, JmsProducer jmsProducer) {
+    public EmployeeController(final EmployeeService employeeService, JmsService jmsService) {
         this.employeeService = employeeService;
-        this.jmsProducer = jmsProducer;
+        this.jmsService = jmsService;
     }
 
     @ApiOperation(
@@ -179,8 +179,7 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Internal Server Error — API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response")
     })
     @PostMapping(value = "/jms", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Employee sendMessage(@RequestBody Employee employee) {
-        jmsProducer.sendMessage(employee);
-        return employee;
+    public void sendMessage(@RequestBody Employee employee) {
+        jmsService.sendMessage(employee);
     }
 }
