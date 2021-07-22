@@ -41,7 +41,7 @@ public class JmsService implements MessageListener {
     }
 
     @Override
-    @JmsListener(destination = "${active-mq.topic}")
+    @JmsListener(destination = "${active-mq.destination}")
     public void onMessage(Message message) {
         try{
             ObjectMessage objectMessage = (ObjectMessage)message;

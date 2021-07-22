@@ -22,11 +22,12 @@ mvn clean package
 
 4. The application is available at:
 ```
-http://localhost:8080/webapp
+http://localhost:8080/
 ```
 
 **Use swagger**
 ```
-http://localhost:8080/webapp/swagger-ui.html
-http://localhost:8080/webapp/v2/api-docs
+http://localhost:8080/swagger-ui.html
+http://localhost:8080/v2/api-docs
+http://localhost:8080/actuator
 ```
