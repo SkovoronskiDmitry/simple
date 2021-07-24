@@ -1,0 +1,19 @@
+version: "134.0"
+services:
+  simplewebapp:
+    image: SimpleApplication
+    build: .
+    ports:
+      - '8080:8080'
+      links:
+        - postgres
+
+
+  postgres:
+    image: postgres:9.5
+    environment:
+      POSTGRES_PASSWORD: 'postgresql'
+volumes:
+  ...
+networks:
+  ...

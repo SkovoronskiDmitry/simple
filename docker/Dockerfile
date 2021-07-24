@@ -1,6 +1,9 @@
-FROM openjdk:8-jdk-alpine
+FROM tomcat:8.5.47-jdk8-openjdk
 
-COPY simple-0.0.1-SNAPSHOT.war /simple.war
+COPY ./simple-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
 
-CMD ["/usr/bin/java", "-war", "/simple.war"]
+
+
+
+
 
