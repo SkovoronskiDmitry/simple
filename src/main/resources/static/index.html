@@ -39,6 +39,10 @@
 
 <input id="search_field">
 <button onclick="searchById()">Search employee by ID</button>
+
+<input id="search_field_by_firstName">
+<input id="search_field_by_lastName">
+<button onclick="searchByFirstNameAndLastName()">Search employee by firstName and LastName</button>
 <script>
     function searchById() {
         var employeeId = document.getElementById("search_field").value;
@@ -70,6 +74,39 @@
         xhttp.open("GET", "http://localhost:8080/employees/" + employeeId, true);
         xhttp.send();
     }
+
+<!--      function searchByFirstNameAndLastName() {-->
+<!--        var firstName = document.getElementById-->
+<!--        var lastName =-->
+<!--        var employeeId = document.getElementById("search_field").value;-->
+<!--        var xhttp = new XMLHttpRequest();-->
+<!--        xhttp.onreadystatechange = function () {-->
+<!--            if (this.readyState == 4 && this.status == 200) {-->
+<!--                var employee = JSON.parse(this.responseText);-->
+<!--                var html = '<tr>\n' +-->
+<!--                    '        <th>Employee Id</th>\n' +-->
+<!--                    '        <th>FirstName</th>\n' +-->
+<!--                    '        <th>LastName</th>\n' +-->
+<!--                    '        <th>Department ID</th>\n' +-->
+<!--                    '        <th>JobTitle</th>\n' +-->
+<!--                    '        <th>Gender</th>\n' +-->
+<!--                    '        <th>DateOfBirth</th>\n' +-->
+<!--                    '        <th>Delete</th>\n' +-->
+<!--                    '    </tr>';-->
+<!--                html = html + '<tr><td>' + employee.employeeId + '</td>\n' +-->
+<!--                    '        <td>' + employee.firstName + '</td>\n' +-->
+<!--                    '        <td>' + employee.lastName + '</td>\n' +-->
+<!--                    '        <td>' + employee.departmentId + '</td>' +-->
+<!--                    '        <td>' + employee.jobTitle + '</td>' +-->
+<!--                    '        <td>' + employee.gender + '</td>' +-->
+<!--                    '        <td>' + employee.dateOfBirth + '</td>' +-->
+<!--                    '        <td><button onclick="deleteEmployee(' + employee.employeeId + ')">Delete</button></td></tr>';-->
+<!--                document.getElementById("employeeList").innerHTML = html;-->
+<!--            }-->
+<!--        };-->
+<!--        xhttp.open("GET", "http://localhost:8080/employees/" + firstName + "/"+ lastName, true);-->
+<!--        xhttp.send();-->
+<!--    }-->
 
     function deleteEmployee(employeeId) {
         var xhttp = new XMLHttpRequest();
