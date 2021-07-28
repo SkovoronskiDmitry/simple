@@ -2,6 +2,7 @@ package com.mastery.java.task.simple.rest;
 
 import com.mastery.java.task.simple.dto.ErrorDto;
 import com.mastery.java.task.simple.service.datatime.DateTimeService;
+import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,17 @@ public class CustomGlobalExceptionHandler {
 
     @ExceptionHandler(value = {EmployeeServiceNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDto handleEmployeeNotFoundException(final EmployeeServiceNotFoundException ex) {
+    public ErrorDto handleEmployeeServiceNotFoundException(final EmployeeServiceNotFoundException ex) {
         LOGGER.error("Not found", ex);
         return createErrorDto(HttpStatus.NOT_FOUND, "Employee not found."
+        );
+    }
+
+    @ExceptionHandler(value = {EmployeeServiceException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorDto handleEmployeeServiceException(final EmployeeServiceException ex) {
+        LOGGER.error("Something wrong with EmployeeService", ex);
+        return createErrorDto(HttpStatus.NOT_FOUND, "Service can't sorted out this issue."
         );
     }
 
