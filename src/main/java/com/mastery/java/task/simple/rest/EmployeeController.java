@@ -6,6 +6,8 @@ import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
 import com.mastery.java.task.simple.service.jms.JmsService;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +18,15 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 @Api(value = "Employees")
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/employees")
 public class EmployeeController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
-
     private final EmployeeService employeeService;
 
     private final JmsService jmsService;
-
-    @Autowired
-    public EmployeeController(final EmployeeService employeeService, JmsService jmsService) {
-        this.employeeService = employeeService;
-        this.jmsService = jmsService;
-    }
 
     @ApiOperation(
             value = "Get all employees",
@@ -50,7 +46,7 @@ public class EmployeeController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Employee> findAll() throws EmployeeServiceException {
-        LOGGER.info("IN: Find all employees");
+        log.info("IN: Find all employees");
         return employeeService.findAll();
     }
 
@@ -72,7 +68,7 @@ public class EmployeeController {
     public Employee findById(
             @ApiParam(value = "ID for search employee", required = true)
             @PathVariable final Long employeeId) throws EmployeeServiceNotFoundException, EmployeeServiceException {
-        LOGGER.info("IN: Find Employee with ID: {}", employeeId);
+        log.info("IN: Find Employee with ID: {}", employeeId);
         return employeeService.findById(employeeId).
                 orElseThrow(() -> new EmployeeServiceNotFoundException(employeeId.toString()));
     }
@@ -97,7 +93,7 @@ public class EmployeeController {
             @PathVariable final String firstName,
             @ApiParam(value = "lastName for search employee", required = true)
             @PathVariable final String lastName) throws EmployeeServiceException {
-        LOGGER.error("IN: Find Employee with firstName: {}, lastName: {}", firstName, lastName);
+        log.error("IN: Find Employee with firstName: {}, lastName: {}", firstName, lastName);
         return employeeService.findByFirstNameAndLastName(firstName, lastName);
     }
 
@@ -119,7 +115,7 @@ public class EmployeeController {
     public Employee createEmployee(
             @ApiParam(value = "New employee", required = true)
             @Valid @RequestBody final Employee employee) throws EmployeeServiceException {
-        LOGGER.info("IN: Create Employee: {}", employee);
+        log.info("IN: Create Employee: {}", employee);
         return employeeService.createEmployee(employee);
     }
 
@@ -142,9 +138,9 @@ public class EmployeeController {
     public void updateEmployee(
             @ApiParam(value = "Employee for update", required = true)
             @RequestBody final Employee employee) throws EmployeeServiceException {
-        LOGGER.info("IN: Update Employee: {}", employee);
+        log.info("IN: Update Employee: {}", employee);
         employeeService.updateEmployee(employee);
-        LOGGER.info("OUT: Employee was successfully update: {}", employee);
+        log.info("OUT: Employee was successfully update: {}", employee);
     }
 
     @ApiOperation(value = "Delete Employee by ID",
@@ -163,9 +159,9 @@ public class EmployeeController {
     public void deleteEmployee(
             @ApiParam(value = "ID for delete employee", required = true)
             @PathVariable final Long employeeId) throws EmployeeServiceException {
-        LOGGER.info("IN: Delete Employee with ID {}", employeeId);
+        log.info("IN: Delete Employee with ID {}", employeeId);
         employeeService.deleteEmployee(employeeId);
-        LOGGER.info("OUT: Employee was successfully delete with ID {}", employeeId);
+        log.info("OUT: Employee was successfully delete with ID {}", employeeId);
     }
 
     @ApiOperation(value = "Send message with employee",
@@ -183,3 +179,5 @@ public class EmployeeController {
         jmsService.sendMessage(employee);
     }
 }
+
+

@@ -12,15 +12,11 @@ The application consists of three main layers:
 
 **Build project**
 
-1. Create "war" using maven plugin:
+1. Run the application
 ```
 mvn clean package
 ```
-2. Copy "war" to the webapps/webapp folder of the tomcat server;
-
-3. Startup Tomcat server;
-
-4. The application is available at:
+2. The application is available at:
 ```
 http://localhost:8080/
 ```

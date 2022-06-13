@@ -6,6 +6,8 @@ import com.mastery.java.task.simple.dao.field.EmployeeColumnNames;
 import com.mastery.java.task.simple.dao.field.SqlRequests;
 import com.mastery.java.task.simple.dao.mapper.EmployeeMapper;
 import com.mastery.java.task.simple.dto.Employee;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
+@Slf4j
+@RequiredArgsConstructor
 public class EmployeeDaoImp implements EmployeeDao {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImp.class);
 
     private static final String EMPLOYEE_ID = EmployeeColumnNames.EMPLOYEE_ID;
     private static final String FIRST_NAME = EmployeeColumnNames.FIRST_NAME;
@@ -43,15 +45,9 @@ public class EmployeeDaoImp implements EmployeeDao {
     private final NamedParameterJdbcTemplate template;
     private final EmployeeMapper employeeMapper;
 
-    @Autowired
-    public EmployeeDaoImp(final NamedParameterJdbcTemplate template, final EmployeeMapper employeeMapper) {
-        this.template = template;
-        this.employeeMapper = employeeMapper;
-    }
-
     @Override
     public List<Employee> findAll() throws EmployeeDaoException {
-        LOGGER.info("Find all employee");
+        log.info("Find all employee");
         try {
             return template.query(FIND_ALL_SQL, employeeMapper);
         } catch (final DataAccessException ex) {
@@ -61,7 +57,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public Optional<Employee> findById(final Integer employeeId) throws EmployeeDaoException {
-        LOGGER.info("Find employee by ID: {}", employeeId);
+        log.info("Find employee by ID: {}", employeeId);
         try {
             final SqlParameterSource namedParameters = new MapSqlParameterSource(EMPLOYEE_ID, employeeId);
             final Employee employee = template.queryForObject(FIND_BY_ID_SQL, namedParameters, employeeMapper);
@@ -74,7 +70,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public Long createEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Create a new employee: {}", employee);
+        log.info("Create a new employee: {}", employee);
         try {
             final KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(CREATE_EMPLOYEE_SQL, mapSqlParameterSource(employee), keyHolder, new String[]{EMPLOYEE_ID});
@@ -88,7 +84,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public void updateEmployee(final Employee employee) throws EmployeeDaoException {
-        LOGGER.info("Update the employee: {}", employee);
+        log.info("Update the employee: {}", employee);
         try {
             template.update(UPDATE_EMPLOYEE_SQL, mapSqlParameterSource(employee));
 
@@ -99,7 +95,7 @@ public class EmployeeDaoImp implements EmployeeDao {
 
     @Override
     public int deleteEmployee(final Integer employeeId) throws EmployeeDaoException {
-        LOGGER.info("Delete the employee with ID: {}", employeeId);
+        log.info("Delete the employee with ID: {}", employeeId);
         try {
             final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource().addValue(EMPLOYEE_ID, employeeId);
             return template.update(DELETE_EMPLOYEE_SQL, mapSqlParameterSource);

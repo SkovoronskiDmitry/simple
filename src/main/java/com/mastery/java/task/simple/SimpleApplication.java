@@ -16,15 +16,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 })
 public class SimpleApplication implements WebMvcConfigurer {
 
-    @Bean
-    public Docket apiDocket() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.mastery.java.task.simple.rest"))
-                .build()
-                .useDefaultResponseMessages(false);
-    }
-
     public static void main(final String[] args) {
         SpringApplication.run(SimpleApplication.class, args);
     }

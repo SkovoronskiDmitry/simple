@@ -39,23 +39,6 @@ public class Employee {
     @EighteenYearsOld
     private LocalDate dateOfBirth;
 
-    public Employee(
-            final String firstName,
-            final String lastName,
-            final String gender,
-            final Long departmentId,
-            final String jobTitle,
-            final LocalDate dateOfBirth
-    ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-//        this.gender = Gender.valueOf(gender.toUpperCase());
-        this.gender = gender;
-        this.departmentId = departmentId;
-        this.jobTitle = jobTitle;
-        this.dateOfBirth = dateOfBirth;
-    }
-
     @ApiModelProperty(value = "Unique number id", example = "1", required = true, position = 1)
     public Long getEmployeeId() {
         return employeeId;

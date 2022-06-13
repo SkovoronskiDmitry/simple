@@ -4,6 +4,8 @@ import com.mastery.java.task.simple.dto.ErrorDto;
 import com.mastery.java.task.simple.service.datatime.DateTimeService;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceException;
 import com.mastery.java.task.simple.service.exception.EmployeeServiceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +25,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
+@RequiredArgsConstructor
 public class CustomGlobalExceptionHandler {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CustomGlobalExceptionHandler.class);
-
     private final DateTimeService dateTimeService;
-
-    @Autowired
-    public CustomGlobalExceptionHandler(final DateTimeService dateTimeService) {
-        this.dateTimeService = dateTimeService;
-    }
 
     @ExceptionHandler(value = {EmployeeServiceNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDto handleEmployeeServiceNotFoundException(final EmployeeServiceNotFoundException ex) {
-        LOGGER.error("Not found", ex);
+        log.error("Not found", ex);
         return createErrorDto(HttpStatus.NOT_FOUND, "Employee not found."
         );
     }
@@ -45,7 +42,7 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = {EmployeeServiceException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleEmployeeServiceException(final EmployeeServiceException ex) {
-        LOGGER.error("Something wrong with EmployeeService", ex);
+        log.error("Something wrong with EmployeeService", ex);
         return createErrorDto(HttpStatus.NOT_FOUND, "Service can't sorted out this issue."
         );
     }
@@ -53,7 +50,7 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleBedRequest(final IllegalArgumentException ex) {
-        LOGGER.error("Bad Request", ex);
+        log.error("Bad Request", ex);
         return createErrorDto(HttpStatus.BAD_REQUEST, "Bad Request — The request was invalid or cannot be served."
         );
     }
@@ -61,7 +58,7 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = {DataAccessException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleDataAccessException(final DataAccessException ex) {
-        LOGGER.error("Internal Server Error", ex);
+        log.error("Internal Server Error", ex);
         return createErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while accessing the database."
         );
     }
@@ -69,7 +66,7 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = {Throwable.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto uncaughtException(final Throwable ex) {
-        LOGGER.error("Unhandled exception caught!", ex);
+        log.error("Unhandled exception caught!", ex);
         return createErrorDto(HttpStatus.INTERNAL_SERVER_ERROR,
                 "API developers should avoid this error. If an error occurs in the global catch blog, the stacktrace should be logged and not returned as response."
         );

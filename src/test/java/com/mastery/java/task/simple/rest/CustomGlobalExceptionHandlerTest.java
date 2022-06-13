@@ -52,7 +52,7 @@ class CustomGlobalExceptionHandlerTest {
 
         //when
         final ErrorDto errorDto =
-                customGlobalExceptionHandler.handleEmployeeNotFoundException(employeeServiceNotFoundException);
+                customGlobalExceptionHandler.handleEmployeeServiceNotFoundException(employeeServiceNotFoundException);
         //then
         Mockito.verify(dateTimeService).getCurrentDate();
         Assertions.assertNotNull(errorDto);
